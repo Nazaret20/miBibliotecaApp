@@ -13,9 +13,18 @@ public class Window extends JFrame {
     private JLabel title, subtitle;
     private JButton addBookBtn;
 
-    // STATISTICS
+    // MAIN
+    // Statistics
     private JPanel main, stats, read, pending, wishlist, avgRating;
     private JLabel numRead, txtRead, numPending, txtPending, numWishlist, txtWishlist, numAvg, txtAvg;
+
+    // Filters
+    private JPanel filtersPanel;
+    private JButton btnRead, btnPending, btnWishlist, btnAll;
+
+    // Cards
+    private JPanel cardsPanel, centerContent;
+    private JScrollPane scroll;
 
     public Window() {
         try {
@@ -41,8 +50,10 @@ public class Window extends JFrame {
         headerEast = new JPanel();
         addBookBtn = new JButton("➕  Añadir libro");
 
-        // STATISTICS
+        // MAIN
         main = new JPanel(new BorderLayout());
+
+        // Statistics
         stats = new JPanel(new GridLayout(1, 4, 10, 0));
         read = new JPanel();
         wishlist = new JPanel();
@@ -61,6 +72,18 @@ public class Window extends JFrame {
         wishlist = createRoundedCard(new Color(251, 234, 240));
         avgRating = createRoundedCard(new Color(238, 237, 254));
 
+        // Filters
+        filtersPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        btnPending = new JButton("Pendientes");
+        btnAll = new JButton("Todos");
+        btnRead = new JButton("Leídos");
+        btnWishlist = new JButton("Quiero leer");
+
+        // Cards
+        cardsPanel = new JPanel();
+        scroll = new JScrollPane(cardsPanel);
+        centerContent = new JPanel();
+
     }
 
     /*----------------------------COMPONENTS----------------------------- */
@@ -69,17 +92,17 @@ public class Window extends JFrame {
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        principal.setBackground(new Color(250, 250, 250));
+        principal.setBackground(new Color(245, 245, 245));
         add(principal);
 
-        // HEADER--------
+        // HEADER------------------------------------------------
         principal.add(header, BorderLayout.NORTH);
         header.add(headerWest, BorderLayout.WEST);
         header.add(headerEast, BorderLayout.EAST);
-        header.setBackground(new Color(250, 250, 250));
+        header.setBackground(new Color(245, 245, 245));
         header.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
-        headerWest.setBackground(new Color(250, 250, 250));
-        headerEast.setBackground(new Color(250, 250, 250));
+        headerWest.setBackground(new Color(245, 245, 245));
+        headerEast.setBackground(new Color(245, 245, 245));
         headerEast.setLayout(new BoxLayout(headerEast, BoxLayout.Y_AXIS));
 
         headerWest.add(title);
@@ -100,13 +123,13 @@ public class Window extends JFrame {
         addBookBtn.setForeground(new Color(12, 68, 124));
         addBookBtn.setMargin(new Insets(8, 16, 8, 16));
 
-        // MAIN--------
+        // MAIN-----------------------------------------------------
         principal.add(main, BorderLayout.CENTER);
 
         // Statistics
         main.add(stats, BorderLayout.NORTH);
         stats.setBorder(BorderFactory.createEmptyBorder(10, 16, 10, 16));
-        stats.setBackground(new Color(250, 250, 250));
+        stats.setBackground(new Color(245, 245, 245));
         stats.setPreferredSize(new Dimension(0, 95));
 
         read.setLayout(new BoxLayout(read, BoxLayout.Y_AXIS));
@@ -153,7 +176,57 @@ public class Window extends JFrame {
         txtAvg.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 12));
         txtAvg.setForeground(new Color(83, 74, 183));
 
+        // Filters
+        main.add(filtersPanel, BorderLayout.CENTER);
+        filtersPanel.add(btnRead);
+        filtersPanel.setBackground(new Color(245, 245, 245));
+        filtersPanel.setBorder(BorderFactory.createEmptyBorder(8, 16, 8, 16));
+        filtersPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        btnRead.setBackground(new Color(225, 245, 238));
+        btnRead.setForeground(new Color(8, 80, 65));
+        btnRead.setFocusPainted(false);
+        btnRead.setMargin(new Insets(6, 16, 6, 16));
+        btnRead.putClientProperty("JButton.buttonType", "roundRect");
+        btnRead.putClientProperty("FlatLaf.style", "borderColor: #8cd8bf; hoverBorderColor: #5DCAA5");
+
+        filtersPanel.add(btnPending);
+        btnPending.setBackground(new Color(250, 238, 218));
+        btnPending.setForeground(new Color(99, 56, 6));
+        btnPending.setFocusPainted(false);
+        btnPending.setMargin(new Insets(6, 16, 6, 16));
+        btnPending.putClientProperty("JButton.buttonType", "roundRect");
+        btnPending.putClientProperty("FlatLaf.style", "borderColor: #FAC775; hoverBorderColor: #EF9F27");
+
+        filtersPanel.add(btnWishlist);
+        btnWishlist.setBackground(new Color(251, 234, 240));
+        btnWishlist.setForeground(new Color(114, 36, 62));
+        btnWishlist.setFocusPainted(false);
+        btnWishlist.setMargin(new Insets(6, 16, 6, 16));
+        btnWishlist.putClientProperty("JButton.buttonType", "roundRect");
+        btnWishlist.putClientProperty("FlatLaf.style", "borderColor: #ED93B1; hoverBorderColor: #D4537E");
+
+        filtersPanel.add(btnAll);
+        btnAll.setBackground(new Color(230, 241, 251));
+        btnAll.setForeground(new Color(12, 68, 124));
+        btnAll.setFocusPainted(false);
+        btnAll.setMargin(new Insets(6, 16, 6, 16));
+        btnAll.putClientProperty("JButton.buttonType", "roundRect");
+        btnAll.putClientProperty("FlatLaf.style", "borderColor: #85B7EB; hoverBorderColor: #378ADD");
+
         // Cards
+        centerContent.setLayout(new BoxLayout(centerContent, BoxLayout.Y_AXIS));
+        centerContent.add(filtersPanel);
+        centerContent.add(scroll);
+        main.add(centerContent, BorderLayout.CENTER);
+        scroll.setBorder(BorderFactory.createEmptyBorder(0, 16, 16, 16));
+        scroll.setAlignmentX(Component.LEFT_ALIGNMENT);
+        scroll.setPreferredSize(new Dimension(750, 400));
+        Book testBook = new Book(1, "El nombre del viento", "Patrick Rothfuss", 5, "Genial", "01/01/2024", "LEIDO");
+        cardsPanel.add(createBookCard(testBook));
+        cardsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        cardsPanel.setBackground(new Color(245, 245, 245));
+        scroll.getViewport().setBackground(new Color(245, 245, 245));
+        scroll.setBorder(null);
 
         // pack();
         setLocationRelativeTo(null);
@@ -181,5 +254,180 @@ public class Window extends JFrame {
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
         card.setBorder(BorderFactory.createEmptyBorder(12, 14, 12, 14));
         return card;
+    }
+
+    private JPanel createBookCard(Book book) {
+        JPanel card = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(new Color(220, 220, 220));
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+                g2.setColor(getBackground());
+                g2.fillRoundRect(1, 1, getWidth() - 2, getHeight() - 2, 15, 15);
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+
+        card.setOpaque(false);
+        card.setBackground(new Color(250, 250, 250));
+        card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
+        card.setBorder(BorderFactory.createEmptyBorder(12, 14, 12, 14));
+
+        JLabel titleLabel = new JLabel(book.getTitle());
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
+
+        JLabel authorLabel = new JLabel(book.getAuthor());
+        authorLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        authorLabel.setForeground(new Color(136, 135, 128));
+
+        String stars = "●".repeat(book.getRating()) + "○".repeat(5 - book.getRating());
+        JLabel starsLabel = new JLabel(stars);
+        starsLabel.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        starsLabel.setForeground(new Color(186, 117, 23));
+
+        // Nota
+        JLabel notesLabel = new JLabel("<html><i>" + book.getNotes() + "</i></html>");
+        notesLabel.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+        notesLabel.setForeground(new Color(136, 135, 128));
+
+        // Fecha
+        JLabel dateLabel = new JLabel("○" + book.getDate());
+        dateLabel.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+        dateLabel.setForeground(new Color(136, 135, 128));
+
+        
+
+        JPanel colorBar = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(getBackground());
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
+                g2.dispose();
+            }
+        };
+
+        colorBar.setBackground(new Color(95, 202, 165));
+        colorBar.setPreferredSize(new Dimension(100, 6));
+        colorBar.setMinimumSize(new Dimension(0, 6));
+        colorBar.setMaximumSize(new Dimension(Integer.MAX_VALUE, 6));
+
+        Color barColor = switch (book.getStatus()) {
+            case "LEIDO" -> new Color(95, 202, 165);
+            case "LEYENDO" -> new Color(133, 183, 235);
+            case "PENDIENTE" -> new Color(250, 199, 117);
+            default -> new Color(237, 147, 177);
+        };
+        colorBar.setBackground(barColor);
+
+        String statusText = switch (book.getStatus()) {
+            case "LEIDO" -> "✓ Leído";
+            case "LEYENDO" -> "○ Leyendo";
+            case "PENDIENTE" -> "○ Pendiente";
+            default -> "♡ Quiero leer";
+        };
+
+        Color statusBg = switch (book.getStatus()) {
+            case "LEIDO" -> new Color(225, 245, 238);
+            case "LEYENDO" -> new Color(230, 241, 251);
+            case "PENDIENTE" -> new Color(250, 238, 218);
+            default -> new Color(251, 234, 240);
+        };
+
+        Color statusFg = switch (book.getStatus()) {
+            case "LEIDO" -> new Color(8, 80, 65);
+            case "LEYENDO" -> new Color(12, 68, 124);
+            case "PENDIENTE" -> new Color(99, 56, 6);
+            default -> new Color(114, 36, 62);
+        };
+
+        JPanel statusPill = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(getBackground());
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
+                g2.dispose();
+                super.paintComponent(g);
+                System.out.println("statusPill paintComponent ejecutado");
+            }
+        };
+
+        statusPill.setBackground(statusBg);
+        statusPill.setOpaque(false);
+        statusPill.setLayout(new FlowLayout(FlowLayout.LEFT, 8, 3));
+        JLabel statusLabel = new JLabel(statusText);
+        statusLabel.setFont(new Font("Segoe UI", Font.BOLD, 10));
+        statusLabel.setForeground(statusFg);
+        statusPill.add(statusLabel);
+        statusPill.setMaximumSize(new Dimension(statusPill.getPreferredSize().width + 16, 24));
+
+        card.add(colorBar, 0);
+        card.add(Box.createVerticalStrut(8), 1);
+        card.add(statusPill, 2);
+        card.add(Box.createVerticalStrut(8));
+        card.add(titleLabel);
+        card.add(Box.createVerticalStrut(2));
+        card.add(authorLabel);
+        card.add(Box.createVerticalStrut(6));
+        card.add(starsLabel);
+        card.add(Box.createVerticalStrut(4));
+        card.add(notesLabel);
+        card.add(Box.createVerticalStrut(2));
+        card.add(dateLabel);
+
+        JButton editBtn = createSmallButton("✎ Editar", new Color(245, 245, 245), new Color(80, 80, 80),
+                new Color(200, 200, 200));
+        JButton deleteBtn = createSmallButton("✕ Eliminar", new Color(251, 234, 240), new Color(114, 36, 62),
+                new Color(237, 147, 177));
+
+        JPanel actionsPanel = new JPanel();
+        actionsPanel.setBackground(new Color(250, 250, 250));
+        actionsPanel.setLayout(new BoxLayout(actionsPanel, BoxLayout.X_AXIS));
+        actionsPanel.setOpaque(false);
+        actionsPanel.add(editBtn);
+        actionsPanel.add(Box.createHorizontalStrut(6));
+        actionsPanel.add(deleteBtn);
+
+        titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        authorLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        starsLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        notesLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        dateLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        statusLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        actionsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        actionsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        card.add(Box.createVerticalStrut(8));
+        card.add(actionsPanel);
+
+        return card;
+    }
+
+    private JButton createSmallButton(String text, Color bg, Color fg, Color border) {
+        JButton btn = new JButton(text) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(border);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 8, 8);
+                g2.setColor(bg);
+                g2.fillRoundRect(1, 1, getWidth() - 2, getHeight() - 2, 8, 8);
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+        btn.setForeground(fg);
+        btn.setFocusPainted(false);
+        btn.setContentAreaFilled(false);
+        btn.setOpaque(false);
+        btn.setBorder(BorderFactory.createEmptyBorder(4, 10, 4, 10));
+        return btn;
     }
 }
