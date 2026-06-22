@@ -49,13 +49,17 @@ public class Window extends JFrame {
         pending = new JPanel();
         avgRating = new JPanel();
         numRead = new JLabel("8");
-        numAvg = new JLabel();
-        numPending = new JLabel();
-        numWishlist = new JLabel();
-        txtAvg = new JLabel("💯 Puntuación media");
-        txtPending = new JLabel("🕑 Pendientes ");
-        txtRead = new JLabel("✔ Leídos");
-        txtWishlist = new JLabel("❤ Quiero leer");
+        numAvg = new JLabel("4.2");
+        numPending = new JLabel("3");
+        numWishlist = new JLabel("6");
+        txtAvg = new JLabel("✲  Puntuación media");
+        txtPending = new JLabel("○  Pendientes ");
+        txtRead = new JLabel("✓  Leídos");
+        txtWishlist = new JLabel("♡  Quiero leer");
+        read = createRoundedCard(new Color(225, 245, 238));
+        pending = createRoundedCard(new Color(250, 238, 218));
+        wishlist = createRoundedCard(new Color(251, 234, 240));
+        avgRating = createRoundedCard(new Color(238, 237, 254));
 
     }
 
@@ -101,10 +105,53 @@ public class Window extends JFrame {
 
         // Statistics
         main.add(stats, BorderLayout.NORTH);
+        stats.setBorder(BorderFactory.createEmptyBorder(10, 16, 10, 16));
+        stats.setBackground(new Color(250, 250, 250));
+        stats.setPreferredSize(new Dimension(0, 95));
+
         read.setLayout(new BoxLayout(read, BoxLayout.Y_AXIS));
+        read.setBorder(BorderFactory.createEmptyBorder(18, 14, 18, 14));
         read.add(txtRead);
         read.add(numRead);
         stats.add(read);
+        read.setBackground(new Color(225, 245, 238));
+        numRead.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        numRead.setForeground(new Color(8, 80, 65));
+        txtRead.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 12));
+        txtRead.setForeground(new Color(15, 110, 86));
+
+        pending.setLayout(new BoxLayout(pending, BoxLayout.Y_AXIS));
+        pending.setBorder(BorderFactory.createEmptyBorder(18, 14, 18, 14));
+        pending.add(txtPending);
+        pending.add(numPending);
+        stats.add(pending);
+        pending.setBackground(new Color(250, 238, 218));
+        numPending.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        numPending.setForeground(new Color(99, 56, 6));
+        txtPending.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 12));
+        txtPending.setForeground(new Color(133, 79, 11));
+
+        wishlist.setLayout(new BoxLayout(wishlist, BoxLayout.Y_AXIS));
+        wishlist.setBorder(BorderFactory.createEmptyBorder(18, 14, 18, 14));
+        wishlist.add(txtWishlist);
+        wishlist.add(numWishlist);
+        stats.add(wishlist);
+        wishlist.setBackground(new Color(251, 234, 240));
+        numWishlist.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        numWishlist.setForeground(new Color(114, 36, 62));
+        txtWishlist.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 12));
+        txtWishlist.setForeground(new Color(153, 53, 86));
+
+        avgRating.setLayout(new BoxLayout(avgRating, BoxLayout.Y_AXIS));
+        avgRating.setBorder(BorderFactory.createEmptyBorder(18, 14, 18, 14));
+        avgRating.add(txtAvg);
+        avgRating.add(numAvg);
+        stats.add(avgRating);
+        avgRating.setBackground(new Color(238, 237, 254));
+        numAvg.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        numAvg.setForeground(new Color(60, 52, 137));
+        txtAvg.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 12));
+        txtAvg.setForeground(new Color(83, 74, 183));
 
         // Cards
 
@@ -115,5 +162,24 @@ public class Window extends JFrame {
     /*----------------------------LISTENERS----------------------------- */
     private void setUpListeners() {
 
+    }
+
+    /*----------------------------EXTRAS----------------------------- */
+    private JPanel createRoundedCard(Color backgroundColor) {
+        JPanel card = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(backgroundColor);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+        card.setOpaque(false);
+        card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
+        card.setBorder(BorderFactory.createEmptyBorder(12, 14, 12, 14));
+        return card;
     }
 }
