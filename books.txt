@@ -1,3 +1,5 @@
-1,El nombre del viento,Patrick Rothfuss,5,Genial,01/01/2024,LEIDO
 2,La ladrona de libros,Markus Zusak,4,Por ahora bien,01/03/2024,LEYENDO
-3,Cien años de soledad,Gabriel García Márquez,0,,, PENDIENTE
+3,Cien años de soledad,Gabriel García Márquez,0,,,PENDIENTE
+4,Harry Potter,J.K. Rowling,5,Un clásico,15/06/2023,LEIDO
+5,El principito,Antoine de Saint-Exupéry,4,,,QUIERO_LEER
+6,Dune,Frank Herbert,3,Muy denso pero bueno,,PENDIENTE

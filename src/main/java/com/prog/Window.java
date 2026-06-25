@@ -76,9 +76,9 @@ public class Window extends JFrame {
         btnAll = new JButton("Todos");
 
         // Cards
-        cardsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        cardsPanel = new JPanel(new WrapLayout(FlowLayout.CENTER, 10, 10));
         scroll = new JScrollPane(cardsPanel);
-        centerContent = new JPanel();
+        centerContent = new JPanel(new BorderLayout());
     }
 
     /*----------------------------COMPONENTS----------------------------- */
@@ -114,6 +114,11 @@ public class Window extends JFrame {
         addBookBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         addBookBtn.setBackground(new Color(230, 241, 251));
         addBookBtn.setForeground(new Color(12, 68, 124));
+        addBookBtn.setMargin(new Insets(8, 16, 8, 16));
+        addBookBtn.putClientProperty("JButton.buttonType", null);
+        addBookBtn.putClientProperty("FlatLaf.style",
+                "arc: 8; borderColor: #85B7EB; hoverBorderColor: #85B7EB; pressedBackground: #B8D4F0");
+
         addBookBtn.setMargin(new Insets(8, 16, 8, 16));
 
         // MAIN
@@ -171,48 +176,62 @@ public class Window extends JFrame {
         filtersPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         filtersPanel.add(btnRead);
-        btnRead.setBackground(new Color(225, 245, 238));
-        btnRead.setForeground(new Color(8, 80, 65));
         btnRead.setFocusPainted(false);
         btnRead.setMargin(new Insets(6, 16, 6, 16));
         btnRead.putClientProperty("JButton.buttonType", "roundRect");
-        btnRead.putClientProperty("FlatLaf.style", "borderColor: #8cd8bf; hoverBorderColor: #5DCAA5");
+        btnRead.setBackground(new Color(240, 240, 240));
+        btnRead.setForeground(new Color(80, 80, 80));
+        btnRead.putClientProperty("FlatLaf.style",
+                "borderColor: #CCCCCC; hoverBorderColor: #7EC87A; hoverBackground: #E1F5DA; pressedBackground: #cee9c2");
 
         filtersPanel.add(btnPending);
-        btnPending.setBackground(new Color(250, 238, 218));
-        btnPending.setForeground(new Color(99, 56, 6));
         btnPending.setFocusPainted(false);
         btnPending.setMargin(new Insets(6, 16, 6, 16));
         btnPending.putClientProperty("JButton.buttonType", "roundRect");
-        btnPending.putClientProperty("FlatLaf.style", "borderColor: #FAC775; hoverBorderColor: #EF9F27");
+        btnPending.setBackground(new Color(240, 240, 240));
+        btnPending.setForeground(new Color(80, 80, 80));
+        btnPending.putClientProperty("FlatLaf.style",
+                "borderColor: #CCCCCC; hoverBorderColor: #F5A623; hoverBackground: #FEF3DC; pressedBackground: #f7e5bd");
 
         filtersPanel.add(btnWishlist);
-        btnWishlist.setBackground(new Color(251, 234, 240));
-        btnWishlist.setForeground(new Color(114, 36, 62));
         btnWishlist.setFocusPainted(false);
         btnWishlist.setMargin(new Insets(6, 16, 6, 16));
         btnWishlist.putClientProperty("JButton.buttonType", "roundRect");
-        btnWishlist.putClientProperty("FlatLaf.style", "borderColor: #ED93B1; hoverBorderColor: #D4537E");
+        btnWishlist.setBackground(new Color(240, 240, 240));
+        btnWishlist.setForeground(new Color(80, 80, 80));
+        btnWishlist.putClientProperty("FlatLaf.style",
+                "borderColor: #CCCCCC; hoverBorderColor: #ED93B1; hoverBackground: #FBEAF0; pressedBackground: #f7d8e8");
 
         filtersPanel.add(btnAll);
-        btnAll.setBackground(new Color(230, 241, 251));
-        btnAll.setForeground(new Color(12, 68, 124));
         btnAll.setFocusPainted(false);
         btnAll.setMargin(new Insets(6, 16, 6, 16));
         btnAll.putClientProperty("JButton.buttonType", "roundRect");
-        btnAll.putClientProperty("FlatLaf.style", "borderColor: #85B7EB; hoverBorderColor: #378ADD rgb(244, 237, 253)");
+        btnAll.setBackground(new Color(240, 240, 240));
+        btnAll.setForeground(new Color(80, 80, 80));
+        btnAll.putClientProperty("FlatLaf.style",
+                "borderColor: #CCCCCC; hoverBorderColor: #85B7EB; hoverBackground: #E6F1FB; pressedBackground: #c8dff3");
+
+        btnRead.setFocusable(false);
+        btnPending.setFocusable(false);
+        btnWishlist.setFocusable(false);
+        btnAll.setFocusable(false);
 
         // Cards
-        centerContent.setLayout(new BoxLayout(centerContent, BoxLayout.Y_AXIS));
-        centerContent.add(filtersPanel);
-        centerContent.add(scroll);
+        centerContent.add(filtersPanel, BorderLayout.NORTH);
+        centerContent.add(scroll, BorderLayout.CENTER);
         centerContent.setAlignmentX(Component.LEFT_ALIGNMENT);
         main.add(centerContent, BorderLayout.CENTER);
 
         scroll.setBorder(null);
         scroll.setAlignmentX(Component.LEFT_ALIGNMENT);
-        scroll.setPreferredSize(new Dimension(750, 400));
         scroll.getViewport().setBackground(new Color(245, 245, 245));
+        scroll.getVerticalScrollBar().setUnitIncrement(16);
+        scroll.getViewport().addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
+            public void componentResized(java.awt.event.ComponentEvent e) {
+                cardsPanel.revalidate();
+            }
+        });
 
         cardsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         cardsPanel.setBackground(new Color(245, 245, 245));
@@ -225,6 +244,75 @@ public class Window extends JFrame {
 
     /*----------------------------LISTENERS----------------------------- */
     private void setUpListeners() {
+        btnRead.addActionListener(e -> {
+            setActiveFilter(btnRead);
+            loadBooks("LEIDO");
+        });
+        btnPending.addActionListener(e -> {
+            setActiveFilter(btnPending);
+            loadBooks("PENDIENTE");
+        });
+        btnWishlist.addActionListener(e -> {
+            setActiveFilter(btnWishlist);
+            loadBooks("QUIERO_LEER");
+        });
+        btnAll.addActionListener(e -> {
+            setActiveFilter(btnAll);
+            loadBooks("ALL");
+        });
+
+        addBookBtn.addActionListener(e -> {
+            new AddBookDialog(this);
+        });
+    }
+
+    private void loadBooks(String filter) {
+        cardsPanel.removeAll();
+        for (Book book : bookFile.getBookList()) {
+            if (filter.equals("ALL") || book.getStatus().equals(filter)) {
+                cardsPanel.add(createBookCard(book));
+            }
+        }
+        cardsPanel.revalidate();
+        cardsPanel.repaint();
+    }
+
+    private void setActiveFilter(JButton activeBtn) {
+        JButton[] filterBtns = { btnRead, btnPending, btnWishlist, btnAll };
+        Color[] bgColors = {
+                new Color(225, 245, 218), 
+                new Color(254, 243, 220),
+                new Color(251, 234, 240), 
+                new Color(230, 241, 251) 
+        };
+        String[] borderColors = { "#7EC87A", "#F5A623", "#ED93B1", "#85B7EB" };
+        String[] hoverColors = { "#7EC87A", "#F5A623", "#ED93B1", "#85B7EB" };
+        String[] hoverBgColors = { "#E0F5D3", "#FEF3DC", "#FBEAF0", "#E6F1FB" };
+        String[] pressedColors = { "#cee9c2", "#f7e5bd", "#f7d8e8", "#c8dff3" };
+
+        for (int i = 0; i < filterBtns.length; i++) {
+            if (filterBtns[i] == activeBtn) {
+                filterBtns[i].setBackground(bgColors[i]);
+                filterBtns[i].setForeground(new Color(44, 44, 42));
+                filterBtns[i].putClientProperty("FlatLaf.style",
+                        "borderColor: " + borderColors[i]);
+                filterBtns[i].putClientProperty("FlatLaf.style",
+                        "borderColor: " + borderColors[i] + "; pressedBackground: " + pressedColors[i]);
+                filterBtns[i].putClientProperty("FlatLaf.style",
+                        "borderColor: " + borderColors[i] + "; hoverBorderColor: " + borderColors[i]
+                                + "; pressedBackground: " + pressedColors[i]);
+            } else {
+                filterBtns[i].setBackground(new Color(240, 240, 240));
+                filterBtns[i].setForeground(new Color(80, 80, 80));
+                filterBtns[i].putClientProperty("FlatLaf.style",
+                        "borderColor: #CCCCCC; hoverBorderColor: " + hoverColors[i] + "; hoverBackground: "
+                                + hoverBgColors[i]);
+                filterBtns[i].putClientProperty("FlatLaf.style",
+                        "borderColor: #CCCCCC; hoverBorderColor: " + hoverColors[i] + "; hoverBackground: "
+                                + hoverBgColors[i] + "; pressedBackground: " + pressedColors[i]);
+            }
+            filterBtns[i].repaint();
+        }
     }
 
     /*----------------------------EXTRAS----------------------------- */
@@ -404,6 +492,19 @@ public class Window extends JFrame {
         card.add(dateLabel);
         card.add(Box.createVerticalStrut(8));
         card.add(actionsPanel);
+
+        deleteBtn.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(null, "¿Eliminar este libro?", "Confirmar",
+                    JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                try {
+                    bookFile.deleteBook(book.getId());
+                    loadBooks("ALL");
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Error al eliminar el libro");
+                }
+            }
+        });
 
         return card;
     }
