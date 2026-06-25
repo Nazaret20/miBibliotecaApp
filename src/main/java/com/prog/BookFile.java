@@ -35,6 +35,20 @@ public class BookFile {
         return bookList;
     }
 
+    public void sortByDate() {
+        bookList.sort((a, b) -> {
+            if (a.getDate().isEmpty())
+                return 1;
+            if (b.getDate().isEmpty())
+                return -1;
+            String[] partsA = a.getDate().split("/");
+            String[] partsB = b.getDate().split("/");
+            String dateA = partsA[2] + partsA[1] + partsA[0];
+            String dateB = partsB[2] + partsB[1] + partsB[0];
+            return dateB.compareTo(dateA);
+        });
+    }
+
     /*----------------------------PERSISTENCE------------------------------ */
     public ArrayList<Book> readFile() throws Exception {
         ArrayList<Book> list = new ArrayList<>();

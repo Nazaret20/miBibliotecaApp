@@ -1,5 +1,7 @@
-2,La ladrona de libros,Markus Zusak,4,Por ahora bien,01/03/2024,LEYENDO
-3,Cien años de soledad,Gabriel García Márquez,0,,,PENDIENTE
+7,Perseidas,Lorena Caja,4,Wow,25/06/2026,LEIDO
+2,La ladrona de espadas,Mariela,5,Esperando,01/06/2024,LEYENDO
 4,Harry Potter,J.K. Rowling,5,Un clásico,15/06/2023,LEIDO
+7,asdf,asdf,1,asdfa,3/3/2020,PROXIMO
+3,Cien años de soledad,Gabriel García Márquez,0,,,PROXIMO
 5,El principito,Antoine de Saint-Exupéry,4,,,QUIERO_LEER
-6,Dune,Frank Herbert,3,Muy denso pero bueno,,PENDIENTE
+6,Dune,Frank Herbert,3,Muy denso pero bueno,,PROXIMO

@@ -48,7 +48,7 @@ public class Window extends JFrame {
         title = new JLabel("Mi biblioteca personal");
         subtitle = new JLabel("Mis lecturas, mi mundo.");
         headerEast = new JPanel();
-        addBookBtn = new JButton("+ Añadir libro");
+        addBookBtn = new JButton("➕ Añadir libro");
 
         // MAIN
         main = new JPanel(new BorderLayout());
@@ -59,8 +59,8 @@ public class Window extends JFrame {
         numAvg = new JLabel("4.2");
         numPending = new JLabel("3");
         numWishlist = new JLabel("6");
-        txtAvg = new JLabel("✲  Puntuación media");
-        txtPending = new JLabel("○  Pendientes");
+        txtAvg = new JLabel("☆  Puntuación media");
+        txtPending = new JLabel("🕒  Proximamente");
         txtRead = new JLabel("✓  Leídos");
         txtWishlist = new JLabel("♡  Quiero leer");
         read = createRoundedCard(new Color(224, 245, 211));
@@ -71,12 +71,12 @@ public class Window extends JFrame {
         // Filters
         filtersPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         btnRead = new JButton("Leídos");
-        btnPending = new JButton("Pendientes");
+        btnPending = new JButton("Próximamente");
         btnWishlist = new JButton("Quiero leer");
         btnAll = new JButton("Todos");
 
         // Cards
-        cardsPanel = new JPanel(new WrapLayout(FlowLayout.CENTER, 10, 10));
+        cardsPanel = new JPanel(new WrapLayout(FlowLayout.CENTER, 15, 15));
         scroll = new JScrollPane(cardsPanel);
         centerContent = new JPanel(new BorderLayout());
     }
@@ -101,11 +101,11 @@ public class Window extends JFrame {
         headerEast.setLayout(new BoxLayout(headerEast, BoxLayout.Y_AXIS));
 
         headerWest.add(title);
-        title.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        title.setFont(new Font("Nunito", Font.BOLD, 22));
         title.setForeground(new Color(44, 44, 42));
 
         headerWest.add(subtitle);
-        subtitle.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        subtitle.setFont(new Font("Nunito", Font.PLAIN, 13));
         subtitle.setForeground(new Color(136, 135, 128));
 
         headerEast.add(Box.createVerticalGlue());
@@ -135,9 +135,9 @@ public class Window extends JFrame {
         read.add(txtRead);
         read.add(numRead);
         stats.add(read);
-        numRead.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        numRead.setFont(new Font("Nunito", Font.BOLD, 22));
         numRead.setForeground(new Color(8, 80, 65));
-        txtRead.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 12));
+        txtRead.setFont(new Font("Nunito", Font.PLAIN, 14));
         txtRead.setForeground(new Color(15, 110, 86));
 
         pending.setLayout(new BoxLayout(pending, BoxLayout.Y_AXIS));
@@ -145,9 +145,9 @@ public class Window extends JFrame {
         pending.add(txtPending);
         pending.add(numPending);
         stats.add(pending);
-        numPending.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        numPending.setFont(new Font("Nunito", Font.BOLD, 22));
         numPending.setForeground(new Color(99, 56, 6));
-        txtPending.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 12));
+        txtPending.setFont(new Font("Nunito", Font.PLAIN, 14));
         txtPending.setForeground(new Color(133, 79, 11));
 
         wishlist.setLayout(new BoxLayout(wishlist, BoxLayout.Y_AXIS));
@@ -155,9 +155,9 @@ public class Window extends JFrame {
         wishlist.add(txtWishlist);
         wishlist.add(numWishlist);
         stats.add(wishlist);
-        numWishlist.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        numWishlist.setFont(new Font("Nunito", Font.BOLD, 22));
         numWishlist.setForeground(new Color(114, 36, 62));
-        txtWishlist.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 12));
+        txtWishlist.setFont(new Font("Nunito", Font.PLAIN, 14));
         txtWishlist.setForeground(new Color(153, 53, 86));
 
         avgRating.setLayout(new BoxLayout(avgRating, BoxLayout.Y_AXIS));
@@ -165,9 +165,9 @@ public class Window extends JFrame {
         avgRating.add(txtAvg);
         avgRating.add(numAvg);
         stats.add(avgRating);
-        numAvg.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        numAvg.setFont(new Font("Nunito", Font.BOLD, 22));
         numAvg.setForeground(new Color(60, 52, 137));
-        txtAvg.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 12));
+        txtAvg.setFont(new Font("Nunito", Font.PLAIN, 14));
         txtAvg.setForeground(new Color(83, 74, 183));
 
         // Filters
@@ -237,7 +237,7 @@ public class Window extends JFrame {
         cardsPanel.setBackground(new Color(245, 245, 245));
         cardsPanel.setBorder(BorderFactory.createEmptyBorder(0, 8, 16, 16));
 
-        loadBooks();
+        loadBooks("ALL");
 
         setLocationRelativeTo(null);
     }
@@ -250,7 +250,7 @@ public class Window extends JFrame {
         });
         btnPending.addActionListener(e -> {
             setActiveFilter(btnPending);
-            loadBooks("PENDIENTE");
+            loadBooks("PROXIMO");
         });
         btnWishlist.addActionListener(e -> {
             setActiveFilter(btnWishlist);
@@ -261,12 +261,16 @@ public class Window extends JFrame {
             loadBooks("ALL");
         });
 
-        addBookBtn.addActionListener(e -> {
-            new AddBookDialog(this);
-        });
+        addBookBtn.addActionListener(e -> new AddBookDialog(this, bookFile));
+    }
+
+    public void refreshBooks() {
+        loadBooks("ALL");
     }
 
     private void loadBooks(String filter) {
+        bookFile.sortByDate();
+        cardsPanel.removeAll();
         cardsPanel.removeAll();
         for (Book book : bookFile.getBookList()) {
             if (filter.equals("ALL") || book.getStatus().equals(filter)) {
@@ -280,10 +284,10 @@ public class Window extends JFrame {
     private void setActiveFilter(JButton activeBtn) {
         JButton[] filterBtns = { btnRead, btnPending, btnWishlist, btnAll };
         Color[] bgColors = {
-                new Color(225, 245, 218), 
+                new Color(225, 245, 218),
                 new Color(254, 243, 220),
-                new Color(251, 234, 240), 
-                new Color(230, 241, 251) 
+                new Color(251, 234, 240),
+                new Color(230, 241, 251)
         };
         String[] borderColors = { "#7EC87A", "#F5A623", "#ED93B1", "#85B7EB" };
         String[] hoverColors = { "#7EC87A", "#F5A623", "#ED93B1", "#85B7EB" };
@@ -334,15 +338,6 @@ public class Window extends JFrame {
         return card;
     }
 
-    private void loadBooks() {
-        cardsPanel.removeAll();
-        for (Book book : bookFile.getBookList()) {
-            cardsPanel.add(createBookCard(book));
-        }
-        cardsPanel.revalidate();
-        cardsPanel.repaint();
-    }
-
     private JPanel createBookCard(Book book) {
         JPanel card = new JPanel() {
             @Override
@@ -360,27 +355,27 @@ public class Window extends JFrame {
         card.setOpaque(false);
         card.setBackground(new Color(250, 250, 250));
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
-        card.setPreferredSize(new Dimension(220, 230));
+        card.setPreferredSize(new Dimension(220, 250));
         card.setBorder(BorderFactory.createEmptyBorder(12, 14, 12, 14));
 
         JLabel titleLabel = new JLabel(book.getTitle());
-        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        titleLabel.setFont(new Font("Nunito", Font.BOLD, 18));
         titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JLabel authorLabel = new JLabel(book.getAuthor());
-        authorLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        authorLabel.setFont(new Font("Nunito", Font.PLAIN, 14));
         authorLabel.setForeground(new Color(136, 135, 128));
         authorLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        String stars = "●".repeat(book.getRating()) + " ".repeat(5 - book.getRating());
+        String stars = "★".repeat(book.getRating()) + "☆".repeat(5 - book.getRating());
         JLabel starsLabel = new JLabel(stars);
-        starsLabel.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        starsLabel.setFont(new Font("Nunito", Font.PLAIN, 15));
         starsLabel.setForeground(new Color(186, 117, 23));
         starsLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JLabel notesLabel = new JLabel(
                 "<html><i>" + (book.getNotes().isEmpty() ? "Sin comentarios" : book.getNotes()) + "</i></html>");
-        notesLabel.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        notesLabel.setFont(new Font("Nunito", Font.PLAIN, 13));
         notesLabel.setForeground(new Color(136, 135, 128));
         notesLabel.setBorder(BorderFactory.createEmptyBorder(0, 6, 0, 0));
 
@@ -391,7 +386,7 @@ public class Window extends JFrame {
         notesWrapper.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JLabel dateLabel = new JLabel("○ " + (book.getDate().isEmpty() ? "Sin fecha" : book.getDate()));
-        dateLabel.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        dateLabel.setFont(new Font("Nunito", Font.PLAIN, 13));
         dateLabel.setForeground(new Color(136, 135, 128));
         dateLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -412,7 +407,7 @@ public class Window extends JFrame {
         colorBar.setBackground(switch (book.getStatus()) {
             case "LEIDO" -> new Color(95, 202, 165);
             case "LEYENDO" -> new Color(133, 183, 235);
-            case "PENDIENTE" -> new Color(250, 199, 117);
+            case "PROXIMO" -> new Color(250, 199, 117);
             default -> new Color(237, 147, 177);
         });
 
@@ -420,19 +415,19 @@ public class Window extends JFrame {
         Color statusBg = switch (book.getStatus()) {
             case "LEIDO" -> new Color(225, 245, 238);
             case "LEYENDO" -> new Color(230, 241, 251);
-            case "PENDIENTE" -> new Color(250, 238, 218);
+            case "PROXIMO" -> new Color(250, 238, 218);
             default -> new Color(251, 234, 240);
         };
         Color statusFg = switch (book.getStatus()) {
             case "LEIDO" -> new Color(8, 80, 65);
             case "LEYENDO" -> new Color(12, 68, 124);
-            case "PENDIENTE" -> new Color(99, 56, 6);
+            case "PROXIMO" -> new Color(99, 56, 6);
             default -> new Color(114, 36, 62);
         };
         String statusText = switch (book.getStatus()) {
             case "LEIDO" -> "✓ Leído";
-            case "LEYENDO" -> "○ Leyendo";
-            case "PENDIENTE" -> "○ Pendiente";
+            case "LEYENDO" -> "📖 Leyendo";
+            case "PROXIMO" -> "🕒 Próximamente";
             default -> "♡ Quiero leer";
         };
 
@@ -451,7 +446,7 @@ public class Window extends JFrame {
         statusPill.setOpaque(false);
         statusPill.setLayout(new FlowLayout(FlowLayout.LEFT, 8, 3));
         JLabel statusLabel = new JLabel(statusText);
-        statusLabel.setFont(new Font("Segoe UI", Font.BOLD, 10));
+        statusLabel.setFont(new Font("Nunito", Font.BOLD, 10));
         statusLabel.setForeground(statusFg);
         statusPill.add(statusLabel);
         statusPill.setMaximumSize(new Dimension(statusPill.getPreferredSize().width + 16, 24));
@@ -462,9 +457,9 @@ public class Window extends JFrame {
         pillWrapper.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         // Action buttons
-        JButton editBtn = createSmallButton("✎ Editar", new Color(245, 245, 245), new Color(80, 80, 80),
+        JButton editBtn = createSmallButton("Editar", new Color(245, 245, 245), new Color(80, 80, 80),
                 new Color(200, 200, 200));
-        JButton deleteBtn = createSmallButton("✕ Eliminar", new Color(251, 234, 240), new Color(114, 36, 62),
+        JButton deleteBtn = createSmallButton("Eliminar", new Color(251, 234, 240), new Color(114, 36, 62),
                 new Color(237, 147, 177));
 
         JPanel actionsPanel = new JPanel();
@@ -505,6 +500,8 @@ public class Window extends JFrame {
                 }
             }
         });
+
+        editBtn.addActionListener(e -> new AddBookDialog(this, bookFile, book));
 
         return card;
     }
