@@ -158,12 +158,13 @@ public class AddBookDialog extends JDialog {
             btn.setBackground(new Color(240, 240, 240));
             btn.setForeground(new Color(80, 80, 80));
             btn.setMargin(new Insets(5, 10, 5, 10));
+            btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
             statusPanel.add(btn);
         }
         btnRead.putClientProperty("FlatLaf.style",
                 "borderColor: #CCCCCC; hoverBorderColor: #7EC87A; hoverBackground: #E1F5DA; pressedBackground: #cee9c2");
         btnReading.putClientProperty("FlatLaf.style",
-                "borderColor: #CCCCCC; hoverBorderColor: #85B7EB; hoverBackground: #E6F1FB; pressedBackground: #c8dff3");
+                "borderColor: #CCCCCC; hoverBorderColor: #A89AE8; hoverBackground: #e8e6fd; pressedBackground: #d0cbfa");
         btnPending.putClientProperty("FlatLaf.style",
                 "borderColor: #CCCCCC; hoverBorderColor: #F5A623; hoverBackground: #FEF3DC; pressedBackground: #f7e5bd");
         btnWishlist.putClientProperty("FlatLaf.style",
@@ -187,8 +188,9 @@ public class AddBookDialog extends JDialog {
             btn.setFocusable(false);
             btn.setBackground(new Color(250, 250, 250));
             btn.setForeground(new Color(180, 180, 180));
-            btn.putClientProperty("FlatLaf.style", "arc: 6; borderColor: #DDDDDD; hoverBorderColor: #EF9F27");
+            btn.putClientProperty("FlatLaf.style", "arc: 6; borderColor: #DDDDDD; hoverBorderColor: #DDDDDD");
             btn.setMargin(new Insets(4, 8, 4, 8));
+            btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
             starsPanel.add(btn);
         }
 
@@ -248,6 +250,9 @@ public class AddBookDialog extends JDialog {
         saveBtn.setMargin(new Insets(8, 16, 8, 16));
         saveBtn.setFocusPainted(false);
         saveBtn.putClientProperty("FlatLaf.style", "arc: 8; borderColor: #85B7EB");
+
+        cancelBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        saveBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         footerPanel.add(cancelBtn);
         footerPanel.add(saveBtn);
@@ -345,14 +350,14 @@ public class AddBookDialog extends JDialog {
         JButton[] statusBtns = { btnRead, btnReading, btnPending, btnWishlist };
         Color[] bgColors = {
                 new Color(225, 245, 218),
-                new Color(230, 241, 251),
+                new Color(238, 236, 254),
                 new Color(254, 243, 220),
                 new Color(251, 234, 240)
         };
-        String[] borderColors = { "#7EC87A", "#85B7EB", "#F5A623", "#ED93B1" };
-        String[] hoverColors = { "#7EC87A", "#85B7EB", "#F5A623", "#ED93B1" };
-        String[] hoverBgColors = { "#E0F5D3", "#E6F1FB", "#FEF3DC", "#FBEAF0" };
-        String[] pressedColors = { "#cee9c2", "#c8dff3", "#f7e5bd", "#f7d8e8" };
+        String[] borderColors = { "#7EC87A", "#A89AE8", "#F5A623", "#ED93B1" };
+        String[] hoverColors = { "#7EC87A", "#A89AE8", "#F5A623", "#ED93B1" };
+        String[] hoverBgColors = { "#E0F5D3", "#e8e6fd", "#FEF3DC", "#FBEAF0" };
+        String[] pressedColors = { "#cee9c2", "#d0cbfa", "#f7e5bd", "#f7d8e8" };
 
         for (int i = 0; i < statusBtns.length; i++) {
             if (statusBtns[i] == activeBtn) {

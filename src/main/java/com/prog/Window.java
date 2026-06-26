@@ -21,7 +21,7 @@ public class Window extends JFrame {
 
     // Filters
     private JPanel filtersPanel;
-    private JButton btnRead, btnPending, btnWishlist, btnAll;
+    private JButton btnRead, btnPending, btnWishlist, btnAll, btnReading;
 
     // Cards
     private JPanel cardsPanel, centerContent;
@@ -55,10 +55,10 @@ public class Window extends JFrame {
 
         // Statistics
         stats = new JPanel(new GridLayout(1, 4, 10, 0));
-        numRead = new JLabel("8");
-        numAvg = new JLabel("4.2");
-        numPending = new JLabel("3");
-        numWishlist = new JLabel("6");
+        numRead = new JLabel();
+        numAvg = new JLabel();
+        numPending = new JLabel();
+        numWishlist = new JLabel();
         txtAvg = new JLabel("☆  Puntuación media");
         txtPending = new JLabel("🕒  Proximamente");
         txtRead = new JLabel("✓  Leídos");
@@ -74,6 +74,7 @@ public class Window extends JFrame {
         btnPending = new JButton("Próximamente");
         btnWishlist = new JButton("Quiero leer");
         btnAll = new JButton("Todos");
+        btnReading = new JButton("Leyendo");
 
         // Cards
         cardsPanel = new JPanel(new WrapLayout(FlowLayout.CENTER, 15, 15));
@@ -120,6 +121,7 @@ public class Window extends JFrame {
                 "arc: 8; borderColor: #85B7EB; hoverBorderColor: #85B7EB; pressedBackground: #B8D4F0");
 
         addBookBtn.setMargin(new Insets(8, 16, 8, 16));
+        addBookBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         // MAIN
         principal.add(main, BorderLayout.CENTER);
@@ -202,6 +204,14 @@ public class Window extends JFrame {
         btnWishlist.putClientProperty("FlatLaf.style",
                 "borderColor: #CCCCCC; hoverBorderColor: #ED93B1; hoverBackground: #FBEAF0; pressedBackground: #f7d8e8");
 
+        filtersPanel.add(btnReading);
+        btnReading.setFocusPainted(false);
+        btnReading.setMargin(new Insets(6, 16, 6, 16));
+        btnReading.putClientProperty("JButton.buttonType", "roundRect");
+        btnReading.setBackground(new Color(240, 240, 240));
+        btnReading.putClientProperty("FlatLaf.style",
+                "borderColor: #CCCCCC; hoverBorderColor: #A89AE8; hoverBackground: #e8e6fd; pressedBackground: #d8d3ff");
+
         filtersPanel.add(btnAll);
         btnAll.setFocusPainted(false);
         btnAll.setMargin(new Insets(6, 16, 6, 16));
@@ -215,6 +225,12 @@ public class Window extends JFrame {
         btnPending.setFocusable(false);
         btnWishlist.setFocusable(false);
         btnAll.setFocusable(false);
+
+        btnRead.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnReading.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnPending.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnWishlist.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnAll.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         // Cards
         centerContent.add(filtersPanel, BorderLayout.NORTH);
@@ -256,6 +272,11 @@ public class Window extends JFrame {
             setActiveFilter(btnWishlist);
             loadBooks("QUIERO_LEER");
         });
+
+        btnReading.addActionListener(e -> {
+            setActiveFilter(btnReading);
+            loadBooks("LEYENDO");
+        });
         btnAll.addActionListener(e -> {
             setActiveFilter(btnAll);
             loadBooks("ALL");
@@ -270,6 +291,7 @@ public class Window extends JFrame {
 
     private void loadBooks(String filter) {
         bookFile.sortByDate();
+        updateStats();
         cardsPanel.removeAll();
         cardsPanel.removeAll();
         for (Book book : bookFile.getBookList()) {
@@ -282,35 +304,29 @@ public class Window extends JFrame {
     }
 
     private void setActiveFilter(JButton activeBtn) {
-        JButton[] filterBtns = { btnRead, btnPending, btnWishlist, btnAll };
+        JButton[] filterBtns = { btnRead, btnPending, btnWishlist, btnReading, btnAll };
         Color[] bgColors = {
                 new Color(225, 245, 218),
                 new Color(254, 243, 220),
                 new Color(251, 234, 240),
+                new Color(232, 230, 253),
                 new Color(230, 241, 251)
         };
-        String[] borderColors = { "#7EC87A", "#F5A623", "#ED93B1", "#85B7EB" };
-        String[] hoverColors = { "#7EC87A", "#F5A623", "#ED93B1", "#85B7EB" };
-        String[] hoverBgColors = { "#E0F5D3", "#FEF3DC", "#FBEAF0", "#E6F1FB" };
-        String[] pressedColors = { "#cee9c2", "#f7e5bd", "#f7d8e8", "#c8dff3" };
+        String[] borderColors = { "#7EC87A", "#F5A623", "#ED93B1", "#A89AE8", "#85B7EB" };
+        String[] hoverColors = { "#7EC87A", "#F5A623", "#ED93B1", "#A89AE8", "#85B7EB" };
+        String[] hoverBgColors = { "#E0F5D3", "#FEF3DC", "#FBEAF0", "#e8e6fd", "#E6F1FB" };
+        String[] pressedColors = { "#cee9c2", "#f7e5bd", "#f7d8e8", "#d8d3ff", "#c8dff3" };
 
         for (int i = 0; i < filterBtns.length; i++) {
             if (filterBtns[i] == activeBtn) {
                 filterBtns[i].setBackground(bgColors[i]);
                 filterBtns[i].setForeground(new Color(44, 44, 42));
                 filterBtns[i].putClientProperty("FlatLaf.style",
-                        "borderColor: " + borderColors[i]);
-                filterBtns[i].putClientProperty("FlatLaf.style",
-                        "borderColor: " + borderColors[i] + "; pressedBackground: " + pressedColors[i]);
-                filterBtns[i].putClientProperty("FlatLaf.style",
                         "borderColor: " + borderColors[i] + "; hoverBorderColor: " + borderColors[i]
                                 + "; pressedBackground: " + pressedColors[i]);
             } else {
                 filterBtns[i].setBackground(new Color(240, 240, 240));
                 filterBtns[i].setForeground(new Color(80, 80, 80));
-                filterBtns[i].putClientProperty("FlatLaf.style",
-                        "borderColor: #CCCCCC; hoverBorderColor: " + hoverColors[i] + "; hoverBackground: "
-                                + hoverBgColors[i]);
                 filterBtns[i].putClientProperty("FlatLaf.style",
                         "borderColor: #CCCCCC; hoverBorderColor: " + hoverColors[i] + "; hoverBackground: "
                                 + hoverBgColors[i] + "; pressedBackground: " + pressedColors[i]);
@@ -320,6 +336,29 @@ public class Window extends JFrame {
     }
 
     /*----------------------------EXTRAS----------------------------- */
+    private void updateStats() {
+        int read = 0, pending = 0, wishlist = 0, reading = 0;
+        int totalRating = 0, ratedBooks = 0;
+
+        for (Book book : bookFile.getBookList()) {
+            switch (book.getStatus()) {
+                case "LEIDO" -> read++;
+                case "LEYENDO" -> reading++;
+                case "PROXIMO" -> pending++;
+                case "QUIERO_LEER" -> wishlist++;
+            }
+            if (book.getRating() > 0) {
+                totalRating += book.getRating();
+                ratedBooks++;
+            }
+        }
+
+        numRead.setText(String.valueOf(read));
+        numPending.setText(String.valueOf(pending));
+        numWishlist.setText(String.valueOf(wishlist));
+        numAvg.setText(ratedBooks > 0 ? String.format("%.1f", (double) totalRating / ratedBooks) : "-");
+    }
+
     private JPanel createRoundedCard(Color backgroundColor) {
         JPanel card = new JPanel() {
             @Override
@@ -406,7 +445,7 @@ public class Window extends JFrame {
         colorBar.setMaximumSize(new Dimension(Integer.MAX_VALUE, 6));
         colorBar.setBackground(switch (book.getStatus()) {
             case "LEIDO" -> new Color(95, 202, 165);
-            case "LEYENDO" -> new Color(133, 183, 235);
+            case "LEYENDO" -> new Color(168, 154, 232);
             case "PROXIMO" -> new Color(250, 199, 117);
             default -> new Color(237, 147, 177);
         });
@@ -414,13 +453,13 @@ public class Window extends JFrame {
         // Status pill
         Color statusBg = switch (book.getStatus()) {
             case "LEIDO" -> new Color(225, 245, 238);
-            case "LEYENDO" -> new Color(230, 241, 251);
+            case "LEYENDO" -> new Color(238, 236, 254);
             case "PROXIMO" -> new Color(250, 238, 218);
             default -> new Color(251, 234, 240);
         };
         Color statusFg = switch (book.getStatus()) {
             case "LEIDO" -> new Color(8, 80, 65);
-            case "LEYENDO" -> new Color(12, 68, 124);
+            case "LEYENDO" -> new Color(80, 60, 180);
             case "PROXIMO" -> new Color(99, 56, 6);
             default -> new Color(114, 36, 62);
         };
@@ -525,6 +564,7 @@ public class Window extends JFrame {
         btn.setContentAreaFilled(false);
         btn.setOpaque(false);
         btn.setBorder(BorderFactory.createEmptyBorder(4, 10, 4, 10));
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         return btn;
     }
 }
