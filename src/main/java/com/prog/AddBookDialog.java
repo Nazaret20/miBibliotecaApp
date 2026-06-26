@@ -16,9 +16,12 @@ public class AddBookDialog extends JDialog {
     private BookFile bookFile;
     private Window window;
     private Book editingBook = null;
+    private String dialogTitle, dialogSubtitle;
 
     public AddBookDialog(Window parent, BookFile bookFile, Book book) {
         super(parent, "Editar libro", true);
+        this.dialogTitle = "Editar libro";
+        this.dialogSubtitle = "Tu opinión sobre este libro, siempre puede cambiar";
         this.bookFile = bookFile;
         this.window = parent;
         this.editingBook = book;
@@ -34,6 +37,8 @@ public class AddBookDialog extends JDialog {
 
     public AddBookDialog(Window parent, BookFile bookFile) {
         super(parent, "Añadir libro", true);
+        this.dialogTitle = "Añadir libro";
+        this.dialogSubtitle = "Cada libro es un nuevo mundo por descubrir";
         this.window = parent;
         this.bookFile = bookFile;
         setSize(500, 560);
@@ -96,11 +101,11 @@ public class AddBookDialog extends JDialog {
                 BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(220, 220, 220)),
                 BorderFactory.createEmptyBorder(20, 24, 16, 24)));
 
-        JLabel titleDialogLabel = new JLabel("Añadir libro");
+        JLabel titleDialogLabel = new JLabel(dialogTitle);
         titleDialogLabel.setFont(new Font("Nunito", Font.BOLD, 18));
         titleDialogLabel.setForeground(new Color(44, 44, 42));
 
-        JLabel subtitleDialogLabel = new JLabel("Añade un nuevo libro a tu biblioteca");
+        JLabel subtitleDialogLabel = new JLabel(dialogSubtitle);
         subtitleDialogLabel.setFont(new Font("Nunito", Font.PLAIN, 13));
         subtitleDialogLabel.setForeground(new Color(136, 135, 128));
 
@@ -125,13 +130,13 @@ public class AddBookDialog extends JDialog {
         lblAuthor.setForeground(new Color(80, 80, 80));
 
         JPanel titleField = new JPanel(new BorderLayout(0, 5));
-        txtTitle.putClientProperty("FlatLaf.style", "arc: 8");
+        txtTitle.putClientProperty("FlatLaf.style", "arc: 8; focusedBorderColor: #A89AE8");
         titleField.setBackground(new Color(245, 245, 245));
         titleField.add(lblTitle, BorderLayout.NORTH);
         titleField.add(txtTitle, BorderLayout.CENTER);
 
         JPanel authorField = new JPanel(new BorderLayout(0, 5));
-        txtAuthor.putClientProperty("FlatLaf.style", "arc: 8");
+        txtAuthor.putClientProperty("FlatLaf.style", "arc: 8; focusedBorderColor: #A89AE8");
         authorField.setBackground(new Color(245, 245, 245));
         authorField.add(lblAuthor, BorderLayout.NORTH);
         authorField.add(txtAuthor, BorderLayout.CENTER);
@@ -200,8 +205,8 @@ public class AddBookDialog extends JDialog {
         ratingField.add(starsPanel, BorderLayout.CENTER);
 
         JPanel dateField = new JPanel(new BorderLayout(0, 5));
-        txtDate.putClientProperty("FlatLaf.style", "arc: 8");
-        txtDate.putClientProperty("JTextField.placeholderText", "dd/mm/aaaa");
+        txtDate.putClientProperty("FlatLaf.style", "arc: 8; focusedBorderColor: #A89AE8");
+        txtDate.putClientProperty("JTextField.placeholderText", "Ej: 2/4/2024");
         dateField.setBackground(new Color(245, 245, 245));
         dateField.add(lblDate, BorderLayout.NORTH);
         dateField.add(txtDate, BorderLayout.CENTER);
@@ -225,7 +230,7 @@ public class AddBookDialog extends JDialog {
         txtNotes.setBorder(BorderFactory.createEmptyBorder(6, 8, 6, 8));
 
         JScrollPane notesScroll = new JScrollPane(txtNotes);
-        notesScroll.putClientProperty("FlatLaf.style", "arc: 8");
+        notesScroll.putClientProperty("FlatLaf.style", "arc: 8; focusedBorderColor: #A89AE8");
         notesScroll.setAlignmentX(Component.LEFT_ALIGNMENT);
         notesScroll.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
 
@@ -293,6 +298,12 @@ public class AddBookDialog extends JDialog {
             JOptionPane.showMessageDialog(this, "El título y el autor son obligatorios");
             return;
         }
+
+        if (!date.isEmpty() && !date.matches("\\d{1,2}/\\d{1,2}/\\d{4}")) {
+            JOptionPane.showMessageDialog(this, "El formato de fecha debe ser dd/mm/aaaa");
+            return;
+        }
+
         if (status == null) {
             JOptionPane.showMessageDialog(this, "Selecciona un estado para el libro");
             return;
@@ -302,10 +313,12 @@ public class AddBookDialog extends JDialog {
             if (editingBook == null) {
                 int id = bookFile.getBookList().isEmpty() ? 1
                         : bookFile.getBookList().get(bookFile.getBookList().size() - 1).getId() + 1;
+                date = normalizeDate(txtDate.getText().trim());
                 Book newBook = new Book(id, title, author, selectedRating, notes, date, status);
                 bookFile.writeFile(newBook);
                 bookFile.getBookList().add(newBook);
             } else {
+                date = normalizeDate(txtDate.getText().trim());
                 Book updatedBook = new Book(editingBook.getId(), title, author, selectedRating, notes, date, status);
                 bookFile.editBook(updatedBook);
             }
@@ -316,10 +329,19 @@ public class AddBookDialog extends JDialog {
         }
     }
 
+    private String normalizeDate(String date) {
+        if (date.isEmpty())
+            return "";
+        String[] parts = date.split("/");
+        String day = parts[0].length() == 1 ? "0" + parts[0] : parts[0];
+        String month = parts[1].length() == 1 ? "0" + parts[1] : parts[1];
+        return day + "/" + month + "/" + parts[2];
+    }
+
     private String getSelectedStatus() {
         if (btnRead.getBackground().equals(new Color(225, 245, 218)))
             return "LEIDO";
-        if (btnReading.getBackground().equals(new Color(230, 241, 251)))
+        if (btnReading.getBackground().equals(new Color(238, 236, 254)))
             return "LEYENDO";
         if (btnPending.getBackground().equals(new Color(254, 243, 220)))
             return "PROXIMO";

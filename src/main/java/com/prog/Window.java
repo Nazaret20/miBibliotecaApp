@@ -85,7 +85,7 @@ public class Window extends JFrame {
     /*----------------------------COMPONENTS----------------------------- */
     private void initComponents() {
         setTitle("Mi biblioteca");
-        setSize(800, 600);
+        setSize(900, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         principal.setBackground(new Color(245, 245, 245));
@@ -283,6 +283,7 @@ public class Window extends JFrame {
         });
 
         addBookBtn.addActionListener(e -> new AddBookDialog(this, bookFile));
+        
     }
 
     public void refreshBooks() {
@@ -337,13 +338,12 @@ public class Window extends JFrame {
 
     /*----------------------------EXTRAS----------------------------- */
     private void updateStats() {
-        int read = 0, pending = 0, wishlist = 0, reading = 0;
+        int read = 0, pending = 0, wishlist = 0;
         int totalRating = 0, ratedBooks = 0;
 
         for (Book book : bookFile.getBookList()) {
             switch (book.getStatus()) {
                 case "LEIDO" -> read++;
-                case "LEYENDO" -> reading++;
                 case "PROXIMO" -> pending++;
                 case "QUIERO_LEER" -> wishlist++;
             }
@@ -394,7 +394,7 @@ public class Window extends JFrame {
         card.setOpaque(false);
         card.setBackground(new Color(250, 250, 250));
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
-        card.setPreferredSize(new Dimension(220, 250));
+        card.setPreferredSize(new Dimension(240, 250));
         card.setBorder(BorderFactory.createEmptyBorder(12, 14, 12, 14));
 
         JLabel titleLabel = new JLabel(book.getTitle());

@@ -1,5 +1,6 @@
+7,Perseidas,Lorena Caja,4,Wow,06/08/2026,LEIDO
 7,Perseidas,Lorena Caja,4,Wow,25/06/2026,LEIDO
-2,La ladrona de espadas,Mariela,5,Esperando,01/06/2024,LEYENDO
+2,La ladrona de espadas,Mariela,5,Esperando,09/09/2024,LEYENDO
 4,Harry Potter,J.K. Rowling,5,Un clásico,15/06/2023,LEIDO
 7,asdf,asdf,1,asdfa,3/3/2020,PROXIMO
 3,Cien años de soledad,Gabriel García Márquez,0,,,PROXIMO
