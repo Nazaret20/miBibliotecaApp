@@ -54,17 +54,18 @@ public class BookFile {
         ArrayList<Book> list = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader("books.txt"))) {
             String line = "";
-            while (line != null) {
-                line = br.readLine();
-                if (line != null) {
-
-                    String[] parts = line.split(",");
-                    int id = Integer.parseInt(parts[0]);
-                    int rating = Integer.parseInt(parts[3]);
-                    Book book = new Book(id, parts[1], parts[2], rating, parts[4], parts[5], parts[6]);
-                    list.add(book);
-                }
-            }
+            while ((line = br.readLine()) != null) {
+    if (line.trim().isEmpty()) continue;
+    try {
+        String[] parts = line.split(",");
+        int id = Integer.parseInt(parts[0]);
+        int rating = Integer.parseInt(parts[3]);
+        Book book = new Book(id, parts[1], parts[2], rating, parts[4], parts[5], parts[6]);
+        list.add(book);
+    } catch (Exception e) {
+        System.out.println("Error al leer línea: " + line);
+    }
+}
         }
         return list;
     }

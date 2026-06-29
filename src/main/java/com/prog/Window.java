@@ -27,6 +27,9 @@ public class Window extends JFrame {
     private JPanel cardsPanel, centerContent;
     private JScrollPane scroll;
 
+    private String currentFilter = "ALL";
+    private int cardWidth = 269;
+
     public Window() {
         try {
             bookFile = new BookFile();
@@ -63,10 +66,10 @@ public class Window extends JFrame {
         txtPending = new JLabel("🕒  Proximamente");
         txtRead = new JLabel("✓  Leídos");
         txtWishlist = new JLabel("♡  Quiero leer");
-        read = createRoundedCard(new Color(224, 245, 211));
-        pending = createRoundedCard(new Color(250, 237, 212));
-        wishlist = createRoundedCard(new Color(255, 224, 240));
-        avgRating = createRoundedCard(new Color(223, 220, 252));
+        read = new JPanel();
+        pending = new JPanel();
+        wishlist = new JPanel();
+        avgRating = new JPanel();
 
         // Filters
         filtersPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -116,12 +119,10 @@ public class Window extends JFrame {
         addBookBtn.setBackground(new Color(230, 241, 251));
         addBookBtn.setForeground(new Color(12, 68, 124));
         addBookBtn.setMargin(new Insets(8, 16, 8, 16));
+        addBookBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         addBookBtn.putClientProperty("JButton.buttonType", null);
         addBookBtn.putClientProperty("FlatLaf.style",
                 "arc: 8; borderColor: #85B7EB; hoverBorderColor: #85B7EB; pressedBackground: #B8D4F0");
-
-        addBookBtn.setMargin(new Insets(8, 16, 8, 16));
-        addBookBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         // MAIN
         principal.add(main, BorderLayout.CENTER);
@@ -132,105 +133,52 @@ public class Window extends JFrame {
         stats.setBackground(new Color(245, 245, 245));
         stats.setPreferredSize(new Dimension(0, 95));
 
-        read.setLayout(new BoxLayout(read, BoxLayout.Y_AXIS));
-        read.setBorder(BorderFactory.createEmptyBorder(18, 14, 18, 14));
-        read.add(txtRead);
-        read.add(numRead);
-        stats.add(read);
+        read = UIUtils.createStatPanel(txtRead, numRead, new Color(224, 245, 211));
+        pending = UIUtils.createStatPanel(txtPending, numPending, new Color(250, 237, 212));
+        wishlist = UIUtils.createStatPanel(txtWishlist, numWishlist, new Color(255, 224, 240));
+        avgRating = UIUtils.createStatPanel(txtAvg, numAvg, new Color(223, 220, 252));
+
         numRead.setFont(new Font("Nunito", Font.BOLD, 22));
         numRead.setForeground(new Color(8, 80, 65));
         txtRead.setFont(new Font("Nunito", Font.PLAIN, 14));
         txtRead.setForeground(new Color(15, 110, 86));
 
-        pending.setLayout(new BoxLayout(pending, BoxLayout.Y_AXIS));
-        pending.setBorder(BorderFactory.createEmptyBorder(18, 14, 18, 14));
-        pending.add(txtPending);
-        pending.add(numPending);
-        stats.add(pending);
         numPending.setFont(new Font("Nunito", Font.BOLD, 22));
         numPending.setForeground(new Color(99, 56, 6));
         txtPending.setFont(new Font("Nunito", Font.PLAIN, 14));
         txtPending.setForeground(new Color(133, 79, 11));
 
-        wishlist.setLayout(new BoxLayout(wishlist, BoxLayout.Y_AXIS));
-        wishlist.setBorder(BorderFactory.createEmptyBorder(18, 14, 18, 14));
-        wishlist.add(txtWishlist);
-        wishlist.add(numWishlist);
-        stats.add(wishlist);
         numWishlist.setFont(new Font("Nunito", Font.BOLD, 22));
         numWishlist.setForeground(new Color(114, 36, 62));
         txtWishlist.setFont(new Font("Nunito", Font.PLAIN, 14));
         txtWishlist.setForeground(new Color(153, 53, 86));
 
-        avgRating.setLayout(new BoxLayout(avgRating, BoxLayout.Y_AXIS));
-        avgRating.setBorder(BorderFactory.createEmptyBorder(18, 14, 18, 14));
-        avgRating.add(txtAvg);
-        avgRating.add(numAvg);
-        stats.add(avgRating);
         numAvg.setFont(new Font("Nunito", Font.BOLD, 22));
         numAvg.setForeground(new Color(60, 52, 137));
         txtAvg.setFont(new Font("Nunito", Font.PLAIN, 14));
         txtAvg.setForeground(new Color(83, 74, 183));
+
+        stats.add(read);
+        stats.add(pending);
+        stats.add(wishlist);
+        stats.add(avgRating);
 
         // Filters
         filtersPanel.setBackground(new Color(245, 245, 245));
         filtersPanel.setBorder(BorderFactory.createEmptyBorder(16, 12, 8, 16));
         filtersPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
+        setupFilterButton(btnRead, "#7EC87A", "#E1F5DA", "#cee9c2");
+        setupFilterButton(btnPending, "#F5A623", "#FEF3DC", "#f7e5bd");
+        setupFilterButton(btnWishlist, "#ED93B1", "#FBEAF0", "#f7d8e8");
+        setupFilterButton(btnReading, "#A89AE8", "#e8e6fd", "#d8d3ff");
+        setupFilterButton(btnAll, "#85B7EB", "#E6F1FB", "#c8dff3");
+
         filtersPanel.add(btnRead);
-        btnRead.setFocusPainted(false);
-        btnRead.setMargin(new Insets(6, 16, 6, 16));
-        btnRead.putClientProperty("JButton.buttonType", "roundRect");
-        btnRead.setBackground(new Color(240, 240, 240));
-        btnRead.setForeground(new Color(80, 80, 80));
-        btnRead.putClientProperty("FlatLaf.style",
-                "borderColor: #CCCCCC; hoverBorderColor: #7EC87A; hoverBackground: #E1F5DA; pressedBackground: #cee9c2");
-
         filtersPanel.add(btnPending);
-        btnPending.setFocusPainted(false);
-        btnPending.setMargin(new Insets(6, 16, 6, 16));
-        btnPending.putClientProperty("JButton.buttonType", "roundRect");
-        btnPending.setBackground(new Color(240, 240, 240));
-        btnPending.setForeground(new Color(80, 80, 80));
-        btnPending.putClientProperty("FlatLaf.style",
-                "borderColor: #CCCCCC; hoverBorderColor: #F5A623; hoverBackground: #FEF3DC; pressedBackground: #f7e5bd");
-
         filtersPanel.add(btnWishlist);
-        btnWishlist.setFocusPainted(false);
-        btnWishlist.setMargin(new Insets(6, 16, 6, 16));
-        btnWishlist.putClientProperty("JButton.buttonType", "roundRect");
-        btnWishlist.setBackground(new Color(240, 240, 240));
-        btnWishlist.setForeground(new Color(80, 80, 80));
-        btnWishlist.putClientProperty("FlatLaf.style",
-                "borderColor: #CCCCCC; hoverBorderColor: #ED93B1; hoverBackground: #FBEAF0; pressedBackground: #f7d8e8");
-
         filtersPanel.add(btnReading);
-        btnReading.setFocusPainted(false);
-        btnReading.setMargin(new Insets(6, 16, 6, 16));
-        btnReading.putClientProperty("JButton.buttonType", "roundRect");
-        btnReading.setBackground(new Color(240, 240, 240));
-        btnReading.putClientProperty("FlatLaf.style",
-                "borderColor: #CCCCCC; hoverBorderColor: #A89AE8; hoverBackground: #e8e6fd; pressedBackground: #d8d3ff");
-
         filtersPanel.add(btnAll);
-        btnAll.setFocusPainted(false);
-        btnAll.setMargin(new Insets(6, 16, 6, 16));
-        btnAll.putClientProperty("JButton.buttonType", "roundRect");
-        btnAll.setBackground(new Color(240, 240, 240));
-        btnAll.setForeground(new Color(80, 80, 80));
-        btnAll.putClientProperty("FlatLaf.style",
-                "borderColor: #CCCCCC; hoverBorderColor: #85B7EB; hoverBackground: #E6F1FB; pressedBackground: #c8dff3");
-
-        btnRead.setFocusable(false);
-        btnPending.setFocusable(false);
-        btnWishlist.setFocusable(false);
-        btnAll.setFocusable(false);
-
-        btnRead.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnReading.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnPending.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnWishlist.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnAll.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         // Cards
         centerContent.add(filtersPanel, BorderLayout.NORTH);
@@ -251,39 +199,77 @@ public class Window extends JFrame {
 
         cardsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         cardsPanel.setBackground(new Color(245, 245, 245));
-        cardsPanel.setBorder(BorderFactory.createEmptyBorder(0, 8, 16, 16));
+        cardsPanel.setBorder(null);
+        scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         loadBooks("ALL");
-
         setLocationRelativeTo(null);
+    }
+
+    private void setupFilterButton(JButton btn, String hoverBorder, String hoverBg, String pressed) {
+        btn.setFocusPainted(false);
+        btn.setFocusable(false);
+        btn.setMargin(new Insets(6, 16, 6, 16));
+        btn.putClientProperty("JButton.buttonType", "roundRect");
+        btn.setBackground(new Color(240, 240, 240));
+        btn.setForeground(new Color(80, 80, 80));
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btn.putClientProperty("FlatLaf.style",
+                "borderColor: #CCCCCC; hoverBorderColor: " + hoverBorder +
+                        "; hoverBackground: " + hoverBg + "; pressedBackground: " + pressed);
     }
 
     /*----------------------------LISTENERS----------------------------- */
     private void setUpListeners() {
         btnRead.addActionListener(e -> {
             setActiveFilter(btnRead);
+            currentFilter = "LEIDO";
             loadBooks("LEIDO");
         });
         btnPending.addActionListener(e -> {
             setActiveFilter(btnPending);
+            currentFilter = "PROXIMO";
             loadBooks("PROXIMO");
         });
         btnWishlist.addActionListener(e -> {
             setActiveFilter(btnWishlist);
+            currentFilter = "QUIERO_LEER";
             loadBooks("QUIERO_LEER");
         });
 
         btnReading.addActionListener(e -> {
             setActiveFilter(btnReading);
+            currentFilter = "LEYENDO";
             loadBooks("LEYENDO");
         });
         btnAll.addActionListener(e -> {
             setActiveFilter(btnAll);
+            currentFilter = "ALL";
             loadBooks("ALL");
         });
 
         addBookBtn.addActionListener(e -> new AddBookDialog(this, bookFile));
-        
+
+        addWindowStateListener(e -> {
+            if ((e.getNewState() & java.awt.Frame.MAXIMIZED_BOTH) != 0) {
+                SwingUtilities.invokeLater(() -> {
+                    int width = (scroll.getViewport().getWidth() - 65) / 4;
+                    updateCardSize(width);
+                    loadBooks(currentFilter);
+                });
+            } else {
+                SwingUtilities.invokeLater(() -> {
+                    cardWidth = 269;
+                    loadBooks(currentFilter);
+                });
+            }
+        });
+    }
+
+    private void updateCardSize(int width) {
+        cardWidth = width;
+        loadBooks(currentFilter);
     }
 
     public void refreshBooks() {
@@ -294,10 +280,9 @@ public class Window extends JFrame {
         bookFile.sortByDate();
         updateStats();
         cardsPanel.removeAll();
-        cardsPanel.removeAll();
         for (Book book : bookFile.getBookList()) {
             if (filter.equals("ALL") || book.getStatus().equals(filter)) {
-                cardsPanel.add(createBookCard(book));
+                cardsPanel.add(new BookCard(book, bookFile, this, cardWidth));
             }
         }
         cardsPanel.revalidate();
@@ -357,214 +342,5 @@ public class Window extends JFrame {
         numPending.setText(String.valueOf(pending));
         numWishlist.setText(String.valueOf(wishlist));
         numAvg.setText(ratedBooks > 0 ? String.format("%.1f", (double) totalRating / ratedBooks) : "-");
-    }
-
-    private JPanel createRoundedCard(Color backgroundColor) {
-        JPanel card = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(backgroundColor);
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
-                g2.dispose();
-                super.paintComponent(g);
-            }
-        };
-        card.setOpaque(false);
-        card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
-        card.setBorder(BorderFactory.createEmptyBorder(12, 14, 12, 14));
-        return card;
-    }
-
-    private JPanel createBookCard(Book book) {
-        JPanel card = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(new Color(220, 220, 220));
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
-                g2.setColor(getBackground());
-                g2.fillRoundRect(1, 1, getWidth() - 2, getHeight() - 2, 15, 15);
-                g2.dispose();
-                super.paintComponent(g);
-            }
-        };
-        card.setOpaque(false);
-        card.setBackground(new Color(250, 250, 250));
-        card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
-        card.setPreferredSize(new Dimension(240, 250));
-        card.setBorder(BorderFactory.createEmptyBorder(12, 14, 12, 14));
-
-        JLabel titleLabel = new JLabel(book.getTitle());
-        titleLabel.setFont(new Font("Nunito", Font.BOLD, 18));
-        titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        JLabel authorLabel = new JLabel(book.getAuthor());
-        authorLabel.setFont(new Font("Nunito", Font.PLAIN, 14));
-        authorLabel.setForeground(new Color(136, 135, 128));
-        authorLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        String stars = "★".repeat(book.getRating()) + "☆".repeat(5 - book.getRating());
-        JLabel starsLabel = new JLabel(stars);
-        starsLabel.setFont(new Font("Nunito", Font.PLAIN, 15));
-        starsLabel.setForeground(new Color(186, 117, 23));
-        starsLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        JLabel notesLabel = new JLabel(
-                "<html><i>" + (book.getNotes().isEmpty() ? "Sin comentarios" : book.getNotes()) + "</i></html>");
-        notesLabel.setFont(new Font("Nunito", Font.PLAIN, 13));
-        notesLabel.setForeground(new Color(136, 135, 128));
-        notesLabel.setBorder(BorderFactory.createEmptyBorder(0, 6, 0, 0));
-
-        JPanel notesWrapper = new JPanel(new BorderLayout());
-        notesWrapper.setOpaque(false);
-        notesWrapper.setBorder(BorderFactory.createMatteBorder(0, 3, 0, 0, new Color(200, 200, 200)));
-        notesWrapper.add(notesLabel);
-        notesWrapper.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        JLabel dateLabel = new JLabel("○ " + (book.getDate().isEmpty() ? "Sin fecha" : book.getDate()));
-        dateLabel.setFont(new Font("Nunito", Font.PLAIN, 13));
-        dateLabel.setForeground(new Color(136, 135, 128));
-        dateLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        // Color bar
-        JPanel colorBar = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(getBackground());
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
-                g2.dispose();
-            }
-        };
-        colorBar.setPreferredSize(new Dimension(100, 6));
-        colorBar.setMinimumSize(new Dimension(0, 6));
-        colorBar.setMaximumSize(new Dimension(Integer.MAX_VALUE, 6));
-        colorBar.setBackground(switch (book.getStatus()) {
-            case "LEIDO" -> new Color(95, 202, 165);
-            case "LEYENDO" -> new Color(168, 154, 232);
-            case "PROXIMO" -> new Color(250, 199, 117);
-            default -> new Color(237, 147, 177);
-        });
-
-        // Status pill
-        Color statusBg = switch (book.getStatus()) {
-            case "LEIDO" -> new Color(225, 245, 238);
-            case "LEYENDO" -> new Color(238, 236, 254);
-            case "PROXIMO" -> new Color(250, 238, 218);
-            default -> new Color(251, 234, 240);
-        };
-        Color statusFg = switch (book.getStatus()) {
-            case "LEIDO" -> new Color(8, 80, 65);
-            case "LEYENDO" -> new Color(80, 60, 180);
-            case "PROXIMO" -> new Color(99, 56, 6);
-            default -> new Color(114, 36, 62);
-        };
-        String statusText = switch (book.getStatus()) {
-            case "LEIDO" -> "✓ Leído";
-            case "LEYENDO" -> "📖 Leyendo";
-            case "PROXIMO" -> "🕒 Próximamente";
-            default -> "♡ Quiero leer";
-        };
-
-        JPanel statusPill = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(getBackground());
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
-                g2.dispose();
-                super.paintComponent(g);
-            }
-        };
-        statusPill.setBackground(statusBg);
-        statusPill.setOpaque(false);
-        statusPill.setLayout(new FlowLayout(FlowLayout.LEFT, 8, 3));
-        JLabel statusLabel = new JLabel(statusText);
-        statusLabel.setFont(new Font("Nunito", Font.BOLD, 10));
-        statusLabel.setForeground(statusFg);
-        statusPill.add(statusLabel);
-        statusPill.setMaximumSize(new Dimension(statusPill.getPreferredSize().width + 16, 24));
-
-        JPanel pillWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        pillWrapper.setOpaque(false);
-        pillWrapper.add(statusPill);
-        pillWrapper.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        // Action buttons
-        JButton editBtn = createSmallButton("Editar", new Color(245, 245, 245), new Color(80, 80, 80),
-                new Color(200, 200, 200));
-        JButton deleteBtn = createSmallButton("Eliminar", new Color(251, 234, 240), new Color(114, 36, 62),
-                new Color(237, 147, 177));
-
-        JPanel actionsPanel = new JPanel();
-        actionsPanel.setBackground(new Color(250, 250, 250));
-        actionsPanel.setLayout(new BoxLayout(actionsPanel, BoxLayout.X_AXIS));
-        actionsPanel.setOpaque(false);
-        actionsPanel.add(editBtn);
-        actionsPanel.add(Box.createHorizontalStrut(6));
-        actionsPanel.add(deleteBtn);
-        actionsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        // Assemble card
-        card.add(colorBar, 0);
-        card.add(Box.createVerticalStrut(8), 1);
-        card.add(pillWrapper, 2);
-        card.add(Box.createVerticalStrut(8));
-        card.add(titleLabel);
-        card.add(Box.createVerticalStrut(2));
-        card.add(authorLabel);
-        card.add(Box.createVerticalStrut(6));
-        card.add(starsLabel);
-        card.add(Box.createVerticalStrut(4));
-        card.add(notesWrapper);
-        card.add(Box.createVerticalStrut(2));
-        card.add(dateLabel);
-        card.add(Box.createVerticalStrut(8));
-        card.add(actionsPanel);
-
-        deleteBtn.addActionListener(e -> {
-            int confirm = JOptionPane.showConfirmDialog(null, "¿Eliminar este libro?", "Confirmar",
-                    JOptionPane.YES_NO_OPTION);
-            if (confirm == JOptionPane.YES_OPTION) {
-                try {
-                    bookFile.deleteBook(book.getId());
-                    loadBooks("ALL");
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, "Error al eliminar el libro");
-                }
-            }
-        });
-
-        editBtn.addActionListener(e -> new AddBookDialog(this, bookFile, book));
-
-        return card;
-    }
-
-    private JButton createSmallButton(String text, Color bg, Color fg, Color border) {
-        JButton btn = new JButton(text) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(border);
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 8, 8);
-                g2.setColor(bg);
-                g2.fillRoundRect(1, 1, getWidth() - 2, getHeight() - 2, 8, 8);
-                g2.dispose();
-                super.paintComponent(g);
-            }
-        };
-        btn.setForeground(fg);
-        btn.setFocusPainted(false);
-        btn.setContentAreaFilled(false);
-        btn.setOpaque(false);
-        btn.setBorder(BorderFactory.createEmptyBorder(4, 10, 4, 10));
-        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        return btn;
     }
 }
