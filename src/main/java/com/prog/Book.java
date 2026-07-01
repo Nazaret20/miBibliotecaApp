@@ -2,9 +2,9 @@ package com.prog;
 
 public class Book {
     private int id, rating;
-    private String title, author, notes, date, status;
+    private String title, author, notes, date, status, coverURL;
 
-    public Book(int id, String title, String author, int rating, String notes, String date, String status) {
+    public Book(int id, String title, String author, int rating, String notes, String date, String status, String coverURL) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -12,6 +12,7 @@ public class Book {
         this.notes = notes;
         this.date = date;
         this.status = status;
+        this.coverURL = coverURL;
     }
 
     @Override
@@ -74,5 +75,13 @@ public class Book {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getCoverURL() {
+        return coverURL;
+    }
+
+    public void setCoverURL(String coverURL) {
+        this.coverURL = coverURL;
     }
 }

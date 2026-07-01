@@ -41,4 +41,38 @@ public class BookCoverFetcher {
         }
         return null;
     }
+
+    public static String fetchAuthor(String title) {
+        try {
+            Properties props = new Properties();
+            props.load(BookCoverFetcher.class.getResourceAsStream("/config.properties"));
+            String apiKey = props.getProperty("google.books.api.key");
+            String query = URLEncoder.encode(title, "UTF-8");
+            String urlStr = "https://www.googleapis.com/books/v1/volumes?q=" + query + "&maxResults=1&key=" + apiKey;
+            URI uri = new URI(urlStr);
+            HttpURLConnection conn = (HttpURLConnection) uri.toURL().openConnection();
+            conn.setRequestMethod("GET");
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            StringBuilder response = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                response.append(line);
+            }
+            reader.close();
+
+            JsonObject json = JsonParser.parseString(response.toString()).getAsJsonObject();
+            JsonArray items = json.getAsJsonArray("items");
+            if (items != null && items.size() > 0) {
+                JsonObject volumeInfo = items.get(0).getAsJsonObject().getAsJsonObject("volumeInfo");
+                JsonArray authors = volumeInfo.getAsJsonArray("authors");
+                if (authors != null && authors.size() > 0) {
+                    return authors.get(0).getAsString();
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error al buscar autor: " + e.getMessage());
+        }
+        return null;
+    }
 }

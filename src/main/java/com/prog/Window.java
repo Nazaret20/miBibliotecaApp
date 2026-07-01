@@ -22,6 +22,7 @@ public class Window extends JFrame {
     // Filters
     private JPanel filtersPanel;
     private JButton btnRead, btnPending, btnWishlist, btnAll, btnReading;
+    private JComboBox combo;
 
     // Cards
     private JPanel cardsPanel, centerContent;
@@ -80,6 +81,7 @@ public class Window extends JFrame {
         btnWishlist = new JButton("Quiero leer");
         btnAll = new JButton("Todos");
         btnReading = new JButton("Leyendo");
+        combo = new JComboBox<>(new String[] { "Fecha", "Título" });
 
         // Cards
         cardsPanel = new JPanel(new WrapLayout(FlowLayout.CENTER, 15, 15));
@@ -169,6 +171,8 @@ public class Window extends JFrame {
         filtersPanel.setBackground(new Color(245, 245, 245));
         filtersPanel.setBorder(BorderFactory.createEmptyBorder(16, 12, 8, 16));
         filtersPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        filtersPanel.add(Box.createHorizontalStrut(10));
+        UIUtils.styleComboBox(combo);
 
         setupFilterButton(btnRead, "#7EC87A", "#E1F5DA", "#cee9c2");
         setupFilterButton(btnPending, "#F5A623", "#FEF3DC", "#f7e5bd");
@@ -181,6 +185,7 @@ public class Window extends JFrame {
         filtersPanel.add(btnWishlist);
         filtersPanel.add(btnReading);
         filtersPanel.add(btnAll);
+        filtersPanel.add(combo);
 
         // Cards
         centerContent.add(filtersPanel, BorderLayout.NORTH);
@@ -250,6 +255,14 @@ public class Window extends JFrame {
             currentFilter = "ALL";
             loadBooks("ALL");
         });
+        combo.addActionListener(e -> {
+            if (combo.getSelectedItem().equals("Título")) {
+                bookFile.sortByTitle();
+            } else {
+                bookFile.sortByDate();
+            }
+            loadBooks(currentFilter);
+        });
 
         addBookBtn.addActionListener(e -> new AddBookDialog(this, bookFile));
 
@@ -281,7 +294,6 @@ public class Window extends JFrame {
     }
 
     private void loadBooks(String filter) {
-        bookFile.sortByDate();
         updateStats();
         cardsPanel.removeAll();
         for (Book book : bookFile.getBookList()) {
@@ -347,4 +359,5 @@ public class Window extends JFrame {
         numWishlist.setText(String.valueOf(wishlist));
         numAvg.setText(ratedBooks > 0 ? String.format("%.1f", (double) totalRating / ratedBooks) : "-");
     }
+
 }

@@ -175,41 +175,74 @@ public class BookCard extends JPanel {
             add(rightPanel, BorderLayout.EAST);
 
             new Thread(() -> {
-                String coverUrl = BookCoverFetcher.fetchCoverUrl(book.getTitle());
-                if (coverUrl != null) {
-                    try {
-                        URI uri = new URI(coverUrl);
-                        ImageIcon icon = new ImageIcon(uri.toURL());
-                        Image scaled = icon.getImage().getScaledInstance(75, 110, Image.SCALE_SMOOTH);
-                        SwingUtilities.invokeLater(() -> {
-                            coverLabel.setIcon(new ImageIcon(scaled));
-                            progressBar.setVisible(false);
-                            rightPanel.revalidate();
-                        });
-                    } catch (Exception e) {
+                // Comprobar caché primero
+                java.io.File cacheFile = new java.io.File("cache/" + book.getId() + ".jpg");
+
+                if (cacheFile.exists()) {
+                    // Cargar desde caché
+                    ImageIcon icon = new ImageIcon(cacheFile.getAbsolutePath());
+                    Image scaled = icon.getImage().getScaledInstance(75, 110, Image.SCALE_SMOOTH);
+                    SwingUtilities.invokeLater(() -> {
+                        coverLabel.setIcon(new ImageIcon(scaled));
+                        progressBar.setVisible(false);
+                        rightPanel.revalidate();
+                    });
+                } else {
+                    // Descargar y guardar en caché
+                    String coverUrl = book.getCoverURL();
+                    if (coverUrl == null || coverUrl.isEmpty()) {
+                        coverUrl = BookCoverFetcher.fetchCoverUrl(book.getTitle());
+                        if (coverUrl != null) {
+                            book.setCoverURL(coverUrl);
+                            try {
+                                bookFile.editBook(book);
+                            } catch (Exception e) {
+                                System.out.println("Error al guardar URL: " + e.getMessage());
+                            }
+                        }
+                    }
+                    
+                    final String urlToLoad = coverUrl;
+                    if (urlToLoad != null && !urlToLoad.isEmpty()) {
+                        try {
+                            URI uri = new URI(urlToLoad);
+                            ImageIcon icon = new ImageIcon(uri.toURL());
+                            // Guardar en caché
+                            cacheFile.getParentFile().mkdirs();
+                            javax.imageio.ImageIO.write(
+                                    javax.imageio.ImageIO.read(uri.toURL()),
+                                    "jpg", cacheFile);
+                            Image scaled = icon.getImage().getScaledInstance(75, 110, Image.SCALE_SMOOTH);
+                            SwingUtilities.invokeLater(() -> {
+                                coverLabel.setIcon(new ImageIcon(scaled));
+                                progressBar.setVisible(false);
+                                rightPanel.revalidate();
+                            });
+                        } catch (Exception e) {
+                            SwingUtilities.invokeLater(() -> progressBar.setVisible(false));
+                        }
+                    } else {
                         SwingUtilities.invokeLater(() -> progressBar.setVisible(false));
                     }
-                } else {
-                    SwingUtilities.invokeLater(() -> progressBar.setVisible(false));
                 }
             }).start();
-        }
 
-        // Listeners
-        deleteBtn.addActionListener(e -> {
-            int confirm = JOptionPane.showConfirmDialog(null, "¿Eliminar este libro?", "Confirmar",
-                    JOptionPane.YES_NO_OPTION);
-            if (confirm == JOptionPane.YES_OPTION) {
-                try {
-                    bookFile.deleteBook(book.getId());
-                    window.refreshBooks();
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, "Error al eliminar el libro");
+            // Listeners
+            deleteBtn.addActionListener(e -> {
+                int confirm = JOptionPane.showConfirmDialog(null, "¿Eliminar este libro?", "Confirmar",
+                        JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    try {
+                        bookFile.deleteBook(book.getId());
+                        window.refreshBooks();
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(null, "Error al eliminar el libro");
+                    }
                 }
-            }
-        });
+            });
 
-        editBtn.addActionListener(e -> new AddBookDialog(window, bookFile, book));
+            editBtn.addActionListener(e -> new AddBookDialog(window, bookFile, book));
+        }
     }
 
     @Override

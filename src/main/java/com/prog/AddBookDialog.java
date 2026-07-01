@@ -266,6 +266,32 @@ public class AddBookDialog extends JDialog {
 
     /*----------------------------LISTENERS----------------------------- */
     private void setUpListeners() {
+        Timer debounceTimer = new Timer(800, e -> {
+            String title = txtTitle.getText().trim();
+            if (!title.isEmpty()) {
+                new Thread(() -> {
+                    String author = BookCoverFetcher.fetchAuthor(title);
+                    if (author != null) {
+                        SwingUtilities.invokeLater(() -> txtAuthor.setText(author));
+                    }
+                }).start();
+            }
+        });
+        debounceTimer.setRepeats(false);
+
+        txtTitle.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                debounceTimer.restart();
+            }
+
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                debounceTimer.restart();
+            }
+
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+            }
+        });
+
         btnRead.addActionListener(e -> setActiveStatus(btnRead));
         btnReading.addActionListener(e -> setActiveStatus(btnReading));
         btnPending.addActionListener(e -> setActiveStatus(btnPending));
@@ -293,6 +319,7 @@ public class AddBookDialog extends JDialog {
         String date = txtDate.getText().trim();
         String notes = txtNotes.getText().trim();
         String status = getSelectedStatus();
+        
 
         if (title.isEmpty() || author.isEmpty()) {
             JOptionPane.showMessageDialog(this, "El título y el autor son obligatorios");
@@ -314,12 +341,12 @@ public class AddBookDialog extends JDialog {
                 int id = bookFile.getBookList().isEmpty() ? 1
                         : bookFile.getBookList().get(bookFile.getBookList().size() - 1).getId() + 1;
                 date = normalizeDate(txtDate.getText().trim());
-                Book newBook = new Book(id, title, author, selectedRating, notes, date, status);
+                Book newBook = new Book(id, title, author, selectedRating, notes, date, status, "");
                 bookFile.writeFile(newBook);
                 bookFile.getBookList().add(newBook);
             } else {
                 date = normalizeDate(txtDate.getText().trim());
-                Book updatedBook = new Book(editingBook.getId(), title, author, selectedRating, notes, date, status);
+                Book updatedBook = new Book(editingBook.getId(), title, author, selectedRating, notes, date, status, editingBook.getCoverURL());
                 bookFile.editBook(updatedBook);
             }
             window.refreshBooks();
