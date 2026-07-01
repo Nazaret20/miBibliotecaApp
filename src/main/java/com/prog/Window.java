@@ -27,8 +27,10 @@ public class Window extends JFrame {
     private JPanel cardsPanel, centerContent;
     private JScrollPane scroll;
 
+    // Needs
     private String currentFilter = "ALL";
     private int cardWidth = 269;
+    private boolean isMaximized = false;
 
     public Window() {
         try {
@@ -253,12 +255,14 @@ public class Window extends JFrame {
 
         addWindowStateListener(e -> {
             if ((e.getNewState() & java.awt.Frame.MAXIMIZED_BOTH) != 0) {
+                isMaximized = true;
                 SwingUtilities.invokeLater(() -> {
                     int width = (scroll.getViewport().getWidth() - 65) / 4;
                     updateCardSize(width);
                     loadBooks(currentFilter);
                 });
             } else {
+                isMaximized = false;
                 SwingUtilities.invokeLater(() -> {
                     cardWidth = 269;
                     loadBooks(currentFilter);
@@ -282,7 +286,7 @@ public class Window extends JFrame {
         cardsPanel.removeAll();
         for (Book book : bookFile.getBookList()) {
             if (filter.equals("ALL") || book.getStatus().equals(filter)) {
-                cardsPanel.add(new BookCard(book, bookFile, this, cardWidth));
+                cardsPanel.add(new BookCard(book, bookFile, this, cardWidth, isMaximized));
             }
         }
         cardsPanel.revalidate();
