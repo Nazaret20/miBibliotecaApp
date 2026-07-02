@@ -85,7 +85,6 @@ public class BookCard extends JPanel {
         titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JLabel authorLabel = new JLabel(book.getAuthor());
-        authorLabel.setFont(new Font("Nunito", Font.PLAIN, 14));
         authorLabel.setForeground(new Color(136, 135, 128));
         authorLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -201,7 +200,7 @@ public class BookCard extends JPanel {
                             }
                         }
                     }
-                    
+
                     final String urlToLoad = coverUrl;
                     if (urlToLoad != null && !urlToLoad.isEmpty()) {
                         try {
@@ -226,23 +225,25 @@ public class BookCard extends JPanel {
                     }
                 }
             }).start();
-
-            // Listeners
-            deleteBtn.addActionListener(e -> {
-                int confirm = JOptionPane.showConfirmDialog(null, "¿Eliminar este libro?", "Confirmar",
-                        JOptionPane.YES_NO_OPTION);
-                if (confirm == JOptionPane.YES_OPTION) {
-                    try {
-                        bookFile.deleteBook(book.getId());
-                        window.refreshBooks();
-                    } catch (Exception ex) {
-                        JOptionPane.showMessageDialog(null, "Error al eliminar el libro");
-                    }
-                }
-            });
-
-            editBtn.addActionListener(e -> new AddBookDialog(window, bookFile, book));
         }
+        
+        deleteBtn.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(null, "¿Eliminar este libro?", "Confirmar",
+                    JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                try {
+                    bookFile.deleteBook(book.getId());
+                    window.refreshBooks();
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Error al eliminar el libro");
+                }
+            }
+        });
+
+        editBtn.addActionListener(e -> {
+            System.out.println("Edit clicked");
+            new AddBookDialog(window, bookFile, book);
+        });
     }
 
     @Override

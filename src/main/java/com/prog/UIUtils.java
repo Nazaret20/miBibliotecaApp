@@ -6,25 +6,16 @@ import javax.swing.*;
 
 public class UIUtils {
     public static JButton createSmallButton(String text, Color bg, Color fg, Color border) {
-        JButton btn = new JButton(text) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(border);
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 8, 8);
-                g2.setColor(bg);
-                g2.fillRoundRect(1, 1, getWidth() - 2, getHeight() - 2, 8, 8);
-                g2.dispose();
-                super.paintComponent(g);
-            }
-        };
+        JButton btn = new JButton(text);
+        btn.setBackground(bg);
         btn.setForeground(fg);
         btn.setFocusPainted(false);
-        btn.setContentAreaFilled(false);
-        btn.setOpaque(false);
-        btn.setBorder(BorderFactory.createEmptyBorder(4, 10, 4, 10));
+        btn.setFocusable(false);
+        btn.setMargin(new Insets(4, 10, 4, 10));
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        String borderHex = String.format("#%02x%02x%02x", border.getRed(), border.getGreen(), border.getBlue());
+        btn.putClientProperty("FlatLaf.style",
+                "arc: 8; borderColor: " + borderHex + "; hoverBorderColor: " + borderHex);
         return btn;
     }
 
@@ -67,14 +58,12 @@ public class UIUtils {
     }
 
     public static void styleComboBox(JComboBox<?> combo) {
-        combo.setFont(new Font("Nunito", Font.PLAIN, 14));
         combo.setBackground(new Color(240, 240, 240));
         combo.setForeground(new Color(80, 80, 80));
         combo.setFocusable(false);
         combo.putClientProperty("FlatLaf.style", "arc: 40; borderColor: #CCCCCC; buttonArrowColor: #797979");
         combo.setPreferredSize(new Dimension(90, 32));
         combo.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
 
         combo.setRenderer(new DefaultListCellRenderer() {
             @Override

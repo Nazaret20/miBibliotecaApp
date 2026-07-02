@@ -7,6 +7,10 @@ public class BookFile {
     private ArrayList<Book> bookList;
 
     public BookFile() throws Exception {
+        java.io.File file = new java.io.File("books.txt");
+        if (!file.exists()) {
+            file.createNewFile();
+        }
         bookList = readFile();
     }
 

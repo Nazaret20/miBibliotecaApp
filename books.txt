@@ -1,7 +1,2 @@
-2,La ladrona de espadas,Mariela,5,Esperando,09/09/2024,LEYENDO,http://books.google.com/books/content?id=A93eDwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api
-7,el dia que se perdió la cordura,Javier Castillo,3,Intersante,02/04/2024,LEIDO,http://books.google.com/books/content?id=HGa1DQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api
-4,Harry Potter,J.K. Rowling,5,Un clásico,15/06/2023,LEIDO,http://books.google.com/books/content?id=GEbMEAAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api
-7,asdf,asdf,1,asdfa,3/3/2020,PROXIMO,http://books.google.com/books/content?id=MklmEAAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api
-3,Cien años de soledad,Gabriel García Márquez,0,,,PROXIMO,http://books.google.com/books/content?id=kmAQCwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api
-5,El principito,Antoine de Saint-Exupéry,4,,,QUIERO_LEER,http://books.google.com/books/content?id=1N0KDgAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api
-6,Dune,Frank Herbert,3,Muy denso pero bueno,,PROXIMO,http://books.google.com/books/content?id=uf5NEAAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api
+1,El día que se perdió la cordura,Javier Castillo,4,Guay,,LEIDO,http://books.google.com/books/content?id=HGa1DQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api
+2,asdfa,asdfa,3,asdasdf,,LEYENDO,

@@ -13,6 +13,16 @@ public class Main {
             UIManager.put("Button.font", new Font("Nunito", Font.PLAIN, 14));
             UIManager.put("TextField.font", new Font("Nunito", Font.PLAIN, 14));
             UIManager.put("TextArea.font", new Font("Nunito", Font.PLAIN, 14));
+            UIManager.put("ComboBox.font", new Font("Nunito", Font.PLAIN, 14));
+            UIManager.put("Panel.font", new Font("Nunito", Font.PLAIN, 14));
+            UIManager.put("ProgressBar.font", new Font("Nunito", Font.PLAIN, 14));
+            UIManager.put("OptionPane.font", new Font("Nunito", Font.PLAIN, 14));
+            UIManager.put("OptionPane.messageFont", new Font("Nunito", Font.PLAIN, 14));
+            UIManager.put("OptionPane.buttonFont", new Font("Nunito", Font.PLAIN, 14));
+            UIManager.put("OptionPane.yesButtonText", "Sí");
+            UIManager.put("OptionPane.noButtonText", "No");
+            UIManager.put("OptionPane.cancelButtonText", "Cancelar");
+            UIManager.put("OptionPane.okButtonText", "Aceptar");
         } catch (Exception e) {
             e.printStackTrace();
         }

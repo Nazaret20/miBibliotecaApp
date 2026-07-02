@@ -248,7 +248,7 @@ public class AddBookDialog extends JDialog {
         cancelBtn.setForeground(new Color(80, 80, 80));
         cancelBtn.setMargin(new Insets(8, 16, 8, 16));
         cancelBtn.setFocusPainted(false);
-        cancelBtn.putClientProperty("FlatLaf.style", "arc: 8; borderColor: #CCCCCC");
+        cancelBtn.putClientProperty("FlatLaf.style", "arc: 8; borderColor: #CCCCCC; hoverBorderColor: #CCCCCC; focusedBorderColor: #CCCCCC");
 
         saveBtn.setBackground(new Color(230, 241, 251));
         saveBtn.setForeground(new Color(12, 68, 124));

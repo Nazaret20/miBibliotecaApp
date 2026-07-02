@@ -144,22 +144,18 @@ public class Window extends JFrame {
 
         numRead.setFont(new Font("Nunito", Font.BOLD, 22));
         numRead.setForeground(new Color(8, 80, 65));
-        txtRead.setFont(new Font("Nunito", Font.PLAIN, 14));
         txtRead.setForeground(new Color(15, 110, 86));
 
         numPending.setFont(new Font("Nunito", Font.BOLD, 22));
         numPending.setForeground(new Color(99, 56, 6));
-        txtPending.setFont(new Font("Nunito", Font.PLAIN, 14));
         txtPending.setForeground(new Color(133, 79, 11));
 
         numWishlist.setFont(new Font("Nunito", Font.BOLD, 22));
         numWishlist.setForeground(new Color(114, 36, 62));
-        txtWishlist.setFont(new Font("Nunito", Font.PLAIN, 14));
         txtWishlist.setForeground(new Color(153, 53, 86));
 
         numAvg.setFont(new Font("Nunito", Font.BOLD, 22));
         numAvg.setForeground(new Color(60, 52, 137));
-        txtAvg.setFont(new Font("Nunito", Font.PLAIN, 14));
         txtAvg.setForeground(new Color(83, 74, 183));
 
         stats.add(read);
@@ -171,7 +167,6 @@ public class Window extends JFrame {
         filtersPanel.setBackground(new Color(245, 245, 245));
         filtersPanel.setBorder(BorderFactory.createEmptyBorder(16, 12, 8, 16));
         filtersPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        filtersPanel.add(Box.createHorizontalStrut(10));
         UIUtils.styleComboBox(combo);
 
         setupFilterButton(btnRead, "#7EC87A", "#E1F5DA", "#cee9c2");
@@ -301,6 +296,47 @@ public class Window extends JFrame {
                 cardsPanel.add(new BookCard(book, bookFile, this, cardWidth, isMaximized));
             }
         }
+
+        if (cardsPanel.getComponentCount() == 0) {
+            String emptyMsg = bookFile.getBookList().isEmpty()
+                    ? "Tu biblioteca está vacía"
+                    : "No tienes libros en esta categoría";
+            String emptySub = bookFile.getBookList().isEmpty()
+                    ? "Añade tu primer libro para empezar"
+                    : "Prueba con otro filtro";
+            JPanel emptyPanel = new JPanel();
+            emptyPanel.setLayout(new BoxLayout(emptyPanel, BoxLayout.Y_AXIS));
+            emptyPanel.setOpaque(false);
+            emptyPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+            JLabel icon = new JLabel("📚");
+            icon.setFont(icon.getFont().deriveFont(60f));
+            icon.setForeground(new Color(110, 110, 110));
+            icon.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+            JLabel msg = new JLabel(emptyMsg);
+            msg.setFont(new Font("Nunito", Font.BOLD, 18));
+            msg.setForeground(new Color(100, 100, 100));
+            msg.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+            JLabel sub = new JLabel(emptySub);
+            sub.setForeground(new Color(100, 100, 100));
+            sub.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+            emptyPanel.add(Box.createVerticalGlue());
+            emptyPanel.add(icon);
+            emptyPanel.add(Box.createVerticalStrut(12));
+            emptyPanel.add(msg);
+            emptyPanel.add(Box.createVerticalStrut(6));
+            emptyPanel.add(sub);
+            emptyPanel.add(Box.createVerticalGlue());
+
+            cardsPanel.setLayout(new BorderLayout());
+            cardsPanel.add(emptyPanel, BorderLayout.CENTER);
+        } else {
+            cardsPanel.setLayout(new WrapLayout(FlowLayout.CENTER, 10, 10));
+        }
+
         cardsPanel.revalidate();
         cardsPanel.repaint();
     }
