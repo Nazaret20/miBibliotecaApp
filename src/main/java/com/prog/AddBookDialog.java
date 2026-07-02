@@ -248,7 +248,8 @@ public class AddBookDialog extends JDialog {
         cancelBtn.setForeground(new Color(80, 80, 80));
         cancelBtn.setMargin(new Insets(8, 16, 8, 16));
         cancelBtn.setFocusPainted(false);
-        cancelBtn.putClientProperty("FlatLaf.style", "arc: 8; borderColor: #CCCCCC; hoverBorderColor: #CCCCCC; focusedBorderColor: #CCCCCC");
+        cancelBtn.putClientProperty("FlatLaf.style",
+                "arc: 8; borderColor: #CCCCCC; hoverBorderColor: #CCCCCC; focusedBorderColor: #CCCCCC");
 
         saveBtn.setBackground(new Color(230, 241, 251));
         saveBtn.setForeground(new Color(12, 68, 124));
@@ -272,7 +273,10 @@ public class AddBookDialog extends JDialog {
                 new Thread(() -> {
                     String author = BookCoverFetcher.fetchAuthor(title);
                     if (author != null) {
-                        SwingUtilities.invokeLater(() -> txtAuthor.setText(author));
+                        SwingUtilities.invokeLater(() -> {
+                            txtAuthor.putClientProperty("JTextField.placeholderText", "");
+                            txtAuthor.setText(author);
+                        });
                     }
                 }).start();
             }
@@ -281,6 +285,8 @@ public class AddBookDialog extends JDialog {
 
         txtTitle.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                txtAuthor.setText("");
+                txtAuthor.putClientProperty("JTextField.placeholderText", "Buscando autor...");
                 debounceTimer.restart();
             }
 
@@ -319,7 +325,6 @@ public class AddBookDialog extends JDialog {
         String date = txtDate.getText().trim();
         String notes = txtNotes.getText().trim();
         String status = getSelectedStatus();
-        
 
         if (title.isEmpty() || author.isEmpty()) {
             JOptionPane.showMessageDialog(this, "El título y el autor son obligatorios");
@@ -346,7 +351,8 @@ public class AddBookDialog extends JDialog {
                 bookFile.getBookList().add(newBook);
             } else {
                 date = normalizeDate(txtDate.getText().trim());
-                Book updatedBook = new Book(editingBook.getId(), title, author, selectedRating, notes, date, status, editingBook.getCoverURL());
+                Book updatedBook = new Book(editingBook.getId(), title, author, selectedRating, notes, date, status,
+                        editingBook.getCoverURL());
                 bookFile.editBook(updatedBook);
             }
             window.refreshBooks();

@@ -226,7 +226,7 @@ public class BookCard extends JPanel {
                 }
             }).start();
         }
-        
+
         deleteBtn.addActionListener(e -> {
             int confirm = JOptionPane.showConfirmDialog(null, "¿Eliminar este libro?", "Confirmar",
                     JOptionPane.YES_NO_OPTION);
@@ -240,10 +240,7 @@ public class BookCard extends JPanel {
             }
         });
 
-        editBtn.addActionListener(e -> {
-            System.out.println("Edit clicked");
-            new AddBookDialog(window, bookFile, book);
-        });
+        editBtn.addActionListener(e -> new AddBookDialog(window, bookFile, book));
     }
 
     @Override

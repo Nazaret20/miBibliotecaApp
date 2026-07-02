@@ -22,7 +22,7 @@ public class Window extends JFrame {
     // Filters
     private JPanel filtersPanel;
     private JButton btnRead, btnPending, btnWishlist, btnAll, btnReading;
-    private JComboBox combo;
+    private JComboBox<String> combo;
 
     // Cards
     private JPanel cardsPanel, centerContent;
@@ -93,6 +93,11 @@ public class Window extends JFrame {
     private void initComponents() {
         setTitle("Mi biblioteca");
         setSize(900, 700);
+        // a href=httpswww.flaticon.esiconos-gratisbiblioteca-en-linea title=biblioteca
+        // en línea iconosBiblioteca en línea iconos creados por Triangle Squad -
+        // Flaticona
+        ImageIcon appIcon = new ImageIcon(getClass().getResource("/icons/bibliotecaIcon.png"));
+        setIconImage(appIcon.getImage());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         principal.setBackground(new Color(245, 245, 245));
