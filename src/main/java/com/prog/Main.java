@@ -6,6 +6,10 @@ import javax.swing.*;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.prog.ui.Window;
 
+/**
+ * Entry point of the personal library application.
+ * Initializes the UI configuration and launches the main window.
+ */
 public class Main {
     public static void main(String[] args) {
         setupUI();
