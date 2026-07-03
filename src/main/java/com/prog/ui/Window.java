@@ -3,8 +3,11 @@ package com.prog.ui;
 import java.awt.*;
 import javax.swing.*;
 
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatLightLaf;
 import com.prog.data.BookFile;
 import com.prog.model.Book;
+import com.prog.utils.ThemeColors;
 import com.prog.utils.UIUtils;
 import com.prog.utils.WrapLayout;
 
@@ -20,7 +23,7 @@ public class Window extends JFrame {
     private JPanel principal;
 
     // HEADER
-    private JPanel header, headerWest, headerEast;
+    private JPanel header, headerWest, headerEast, btnsPanel;
     private JLabel title, subtitle;
     private JButton addBookBtn;
 
@@ -36,6 +39,7 @@ public class Window extends JFrame {
     private JButton btnRead, btnPending, btnWishlist, btnAll, btnReading;
     private JComboBox<String> combo;
     private JTextField txtSearch;
+    private JScrollPane filterScroll;
 
     // Cards
     private JPanel cardsPanel, centerContent;
@@ -45,8 +49,9 @@ public class Window extends JFrame {
     private String currentFilter = "ALL";
     private int cardWidth = 269;
     private boolean isMaximized = false;
+    private JButton themeBtn;
 
-    public Window() {
+    public Window(boolean darkMode) {
         try {
             bookFile = new BookFile();
         } catch (Exception e) {
@@ -55,6 +60,7 @@ public class Window extends JFrame {
         setUpLayout();
         initComponents();
         setUpListeners();
+        themeBtn.setText(darkMode ? "☀" : "🌙");
     }
 
     /*----------------------------LAYOUT----------------------------- */
@@ -63,9 +69,11 @@ public class Window extends JFrame {
 
         header = new JPanel(new BorderLayout());
         headerWest = new JPanel(new GridLayout(2, 1, 5, 5));
+        btnsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
         title = new JLabel("Mi biblioteca personal");
         subtitle = new JLabel("Mis lecturas, mi mundo.");
         headerEast = new JPanel();
+        themeBtn = new JButton("🌙");
         addBookBtn = new JButton("➕ Añadir libro");
 
         main = new JPanel(new BorderLayout());
@@ -85,6 +93,7 @@ public class Window extends JFrame {
         avgRating = new JPanel();
 
         filtersPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        filterScroll = new JScrollPane(filtersPanel);
         btnRead = new JButton("Leídos");
         btnPending = new JButton("Próximamente");
         btnWishlist = new JButton("Quiero leer");
@@ -105,37 +114,48 @@ public class Window extends JFrame {
         setIconImage(new ImageIcon(getClass().getResource("/icons/bibliotecaIcon.png")).getImage());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        principal.setBackground(new Color(245, 245, 245));
+        principal.setBackground(ThemeColors.background());
         add(principal);
 
         // HEADER
         principal.add(header, BorderLayout.NORTH);
         header.add(headerWest, BorderLayout.WEST);
         header.add(headerEast, BorderLayout.EAST);
-        header.setBackground(new Color(245, 245, 245));
+        header.setBackground(ThemeColors.background());
         header.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
-        headerWest.setBackground(new Color(245, 245, 245));
-        headerEast.setBackground(new Color(245, 245, 245));
-        headerEast.setLayout(new BoxLayout(headerEast, BoxLayout.Y_AXIS));
 
+        headerWest.setBackground(ThemeColors.background());
         headerWest.add(title);
         title.setFont(new Font("Nunito", Font.BOLD, 22));
-        title.setForeground(new Color(44, 44, 42));
+        title.setForeground(ThemeColors.textPrimary());
         headerWest.add(subtitle);
         subtitle.setFont(new Font("Nunito", Font.PLAIN, 13));
-        subtitle.setForeground(new Color(136, 135, 128));
+        subtitle.setForeground(ThemeColors.textSecondary());
 
-        headerEast.add(Box.createVerticalGlue());
-        headerEast.add(addBookBtn);
-        headerEast.add(Box.createVerticalGlue());
-        addBookBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+        headerEast.setBackground(ThemeColors.background());
+        headerEast.setLayout(new BoxLayout(headerEast, BoxLayout.Y_AXIS));
+
+        themeBtn.setBackground(ThemeColors.buttonBackground());
+        themeBtn.setForeground(ThemeColors.textTertiary());
+        themeBtn.setFocusPainted(false);
+        themeBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        themeBtn.putClientProperty("FlatLaf.style", "arc: 8; borderColor: #CCCCCC");
+        themeBtn.setMargin(new Insets(8, 12, 8, 12));
+
         addBookBtn.setBackground(new Color(230, 241, 251));
         addBookBtn.setForeground(new Color(12, 68, 124));
         addBookBtn.setMargin(new Insets(8, 16, 8, 16));
         addBookBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        addBookBtn.putClientProperty("JButton.buttonType", null);
         addBookBtn.putClientProperty("FlatLaf.style",
                 "arc: 8; borderColor: #85B7EB; hoverBorderColor: #85B7EB; pressedBackground: #B8D4F0");
+
+        btnsPanel.setOpaque(false);
+        btnsPanel.add(addBookBtn);
+        btnsPanel.add(themeBtn);
+
+        headerEast.add(Box.createVerticalGlue());
+        headerEast.add(btnsPanel);
+        headerEast.add(Box.createVerticalGlue());
 
         // MAIN
         principal.add(main, BorderLayout.CENTER);
@@ -143,7 +163,7 @@ public class Window extends JFrame {
         // Statistics
         main.add(stats, BorderLayout.NORTH);
         stats.setBorder(BorderFactory.createEmptyBorder(0, 16, 0, 16));
-        stats.setBackground(new Color(245, 245, 245));
+        stats.setBackground(ThemeColors.background());
         stats.setPreferredSize(new Dimension(0, 95));
 
         read = UIUtils.createStatPanel(txtRead, numRead, new Color(224, 245, 211));
@@ -173,9 +193,12 @@ public class Window extends JFrame {
         stats.add(avgRating);
 
         // Filters
-        filtersPanel.setBackground(new Color(245, 245, 245));
+        filtersPanel.setBackground(ThemeColors.background());
         filtersPanel.setBorder(BorderFactory.createEmptyBorder(16, 12, 8, 16));
         filtersPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        filterScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        filterScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        filterScroll.setBorder(null);
 
         setupFilterButton(btnRead, "#7EC87A", "#E1F5DA", "#cee9c2");
         setupFilterButton(btnPending, "#F5A623", "#FEF3DC", "#f7e5bd");
@@ -195,14 +218,14 @@ public class Window extends JFrame {
         UIUtils.styleSearchField(txtSearch);
 
         // Cards
-        centerContent.add(filtersPanel, BorderLayout.NORTH);
+        centerContent.add(filterScroll, BorderLayout.NORTH);
         centerContent.add(scroll, BorderLayout.CENTER);
         centerContent.setAlignmentX(Component.LEFT_ALIGNMENT);
         main.add(centerContent, BorderLayout.CENTER);
 
         scroll.setBorder(null);
         scroll.setAlignmentX(Component.LEFT_ALIGNMENT);
-        scroll.getViewport().setBackground(new Color(245, 245, 245));
+        scroll.getViewport().setBackground(ThemeColors.background());
         scroll.getVerticalScrollBar().setUnitIncrement(16);
         scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -214,7 +237,7 @@ public class Window extends JFrame {
         });
 
         cardsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        cardsPanel.setBackground(new Color(245, 245, 245));
+        cardsPanel.setBackground(ThemeColors.background());
         cardsPanel.setBorder(null);
 
         loadBooks("ALL");
@@ -226,8 +249,8 @@ public class Window extends JFrame {
         btn.setFocusable(false);
         btn.setMargin(new Insets(6, 16, 6, 16));
         btn.putClientProperty("JButton.buttonType", "roundRect");
-        btn.setBackground(new Color(240, 240, 240));
-        btn.setForeground(new Color(80, 80, 80));
+        btn.setBackground(ThemeColors.buttonBackground());
+        btn.setForeground(ThemeColors.textTertiary());
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btn.putClientProperty("FlatLaf.style",
                 "borderColor: #CCCCCC; hoverBorderColor: " + hoverBorder +
@@ -236,6 +259,7 @@ public class Window extends JFrame {
 
     /*----------------------------LISTENERS----------------------------- */
     private void setUpListeners() {
+        themeBtn.addActionListener(e -> toggleTheme());
         addBookBtn.addActionListener(e -> new AddBookDialog(this, bookFile));
 
         setupFilterListener(btnRead, "LEIDO");
@@ -302,6 +326,22 @@ public class Window extends JFrame {
         });
     }
 
+    private void toggleTheme() {
+        try {
+            Point loc = getLocation();
+            Dimension size = getSize();
+            boolean willBeDark = !(UIManager.getLookAndFeel() instanceof FlatDarkLaf);
+            UIManager.setLookAndFeel(willBeDark ? new FlatDarkLaf() : new FlatLightLaf());
+            Window w = new Window(willBeDark);
+            w.setLocation(loc);
+            w.setSize(size);
+            w.setVisible(true);
+            dispose();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /*----------------------------LOGIC----------------------------- */
     private void searchBooks() {
         String query = txtSearch.getText().trim().toLowerCase();
@@ -360,16 +400,15 @@ public class Window extends JFrame {
 
         JLabel icon = new JLabel("📚");
         icon.setFont(icon.getFont().deriveFont(60f));
-        icon.setForeground(new Color(110, 110, 110));
         icon.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JLabel msgLabel = new JLabel(msg);
         msgLabel.setFont(new Font("Nunito", Font.BOLD, 18));
-        msgLabel.setForeground(new Color(100, 100, 100));
+        msgLabel.setForeground(ThemeColors.textTertiary());
         msgLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JLabel subLabel = new JLabel(sub);
-        subLabel.setForeground(new Color(100, 100, 100));
+        subLabel.setForeground(ThemeColors.textTertiary());
         subLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         emptyPanel.add(Box.createVerticalGlue());
@@ -401,13 +440,13 @@ public class Window extends JFrame {
         for (int i = 0; i < filterBtns.length; i++) {
             if (filterBtns[i] == activeBtn) {
                 filterBtns[i].setBackground(bgColors[i]);
-                filterBtns[i].setForeground(new Color(44, 44, 42));
+                filterBtns[i].setForeground(ThemeColors.textPrimary());
                 filterBtns[i].putClientProperty("FlatLaf.style",
                         "borderColor: " + borderColors[i] + "; hoverBorderColor: " + borderColors[i]
                                 + "; pressedBackground: " + pressedColors[i]);
             } else {
-                filterBtns[i].setBackground(new Color(240, 240, 240));
-                filterBtns[i].setForeground(new Color(80, 80, 80));
+                filterBtns[i].setBackground(ThemeColors.buttonBackground());
+                filterBtns[i].setForeground(ThemeColors.textTertiary());
                 filterBtns[i].putClientProperty("FlatLaf.style",
                         "borderColor: #CCCCCC; hoverBorderColor: " + hoverColors[i] + "; hoverBackground: "
                                 + hoverBgColors[i] + "; pressedBackground: " + pressedColors[i]);

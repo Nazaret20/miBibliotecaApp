@@ -14,7 +14,7 @@ public class Main {
     public static void main(String[] args) {
         setupUI();
         SwingUtilities.invokeLater(() -> {
-            Window window = new Window();
+            Window window = new Window(false);
             window.setVisible(true);
         });
     }

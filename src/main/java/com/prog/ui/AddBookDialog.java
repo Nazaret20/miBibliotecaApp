@@ -6,12 +6,12 @@ import javax.swing.*;
 import com.prog.data.BookCoverFetcher;
 import com.prog.data.BookFile;
 import com.prog.model.Book;
+import com.prog.utils.ThemeColors;
 
 /**
  * Dialog for adding or editing a book in the personal library.
  * Includes fields for title, author, status, rating, date and notes.
- * Automatically fetches the author from Google Books API as the user types the
- * title.
+ * Automatically fetches the author from Google Books API as the user types the title.
  */
 public class AddBookDialog extends JDialog {
 
@@ -31,10 +31,9 @@ public class AddBookDialog extends JDialog {
 
     /**
      * Opens the dialog in edit mode with the book's existing data pre-filled.
-     * 
-     * @param parent   Parent window
+     * @param parent Parent window
      * @param bookFile File handler for saving changes
-     * @param book     Book to edit
+     * @param book Book to edit
      */
     public AddBookDialog(Window parent, BookFile bookFile, Book book) {
         super(parent, "Editar libro", true);
@@ -48,8 +47,7 @@ public class AddBookDialog extends JDialog {
 
     /**
      * Opens the dialog in add mode with empty fields.
-     * 
-     * @param parent   Parent window
+     * @param parent Parent window
      * @param bookFile File handler for saving the new book
      */
     public AddBookDialog(Window parent, BookFile bookFile) {
@@ -112,23 +110,23 @@ public class AddBookDialog extends JDialog {
 
     /*----------------------------COMPONENTS----------------------------- */
     private void initComponents() {
-        mainPanel.setBackground(new Color(245, 245, 245));
+        mainPanel.setBackground(ThemeColors.cardBackground());
         add(mainPanel);
 
         // HEADER
         headerPanel.setLayout(new GridLayout(2, 1, 0, 4));
-        headerPanel.setBackground(new Color(245, 245, 245));
+        headerPanel.setBackground(ThemeColors.cardBackground());
         headerPanel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(220, 220, 220)),
+                BorderFactory.createMatteBorder(0, 0, 1, 0, ThemeColors.border()),
                 BorderFactory.createEmptyBorder(20, 24, 16, 24)));
 
         JLabel titleDialogLabel = new JLabel(dialogTitle);
         titleDialogLabel.setFont(new Font("Nunito", Font.BOLD, 18));
-        titleDialogLabel.setForeground(new Color(44, 44, 42));
+        titleDialogLabel.setForeground(ThemeColors.textPrimary());
 
         JLabel subtitleDialogLabel = new JLabel(dialogSubtitle);
         subtitleDialogLabel.setFont(new Font("Nunito", Font.PLAIN, 13));
-        subtitleDialogLabel.setForeground(new Color(136, 135, 128));
+        subtitleDialogLabel.setForeground(ThemeColors.textSecondary());
 
         headerPanel.add(titleDialogLabel);
         headerPanel.add(subtitleDialogLabel);
@@ -136,19 +134,18 @@ public class AddBookDialog extends JDialog {
 
         // BODY
         bodyPanel.setLayout(new BoxLayout(bodyPanel, BoxLayout.Y_AXIS));
-        bodyPanel.setBackground(new Color(245, 245, 245));
+        bodyPanel.setBackground(ThemeColors.cardBackground());
         bodyPanel.setBorder(BorderFactory.createEmptyBorder(8, 24, 8, 24));
         mainPanel.add(bodyPanel, BorderLayout.CENTER);
 
-        // Estilo común para labels de campo
         JLabel[] fieldLabels = { lblTitle, lblAuthor, lblStatus, lblRating, lblDate, lblNotes };
         for (JLabel lbl : fieldLabels) {
             lbl.setFont(new Font("Nunito", Font.BOLD, 13));
-            lbl.setForeground(new Color(80, 80, 80));
+            lbl.setForeground(ThemeColors.textTertiary());
         }
 
         // Título y autor
-        titleAuthorPanel.setBackground(new Color(245, 245, 245));
+        titleAuthorPanel.setBackground(ThemeColors.cardBackground());
         titleAuthorPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         titleAuthorPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
 
@@ -156,12 +153,12 @@ public class AddBookDialog extends JDialog {
         txtAuthor.putClientProperty("FlatLaf.style", "arc: 8; focusedBorderColor: #A89AE8");
 
         JPanel titleField = new JPanel(new BorderLayout(0, 5));
-        titleField.setBackground(new Color(245, 245, 245));
+        titleField.setBackground(ThemeColors.cardBackground());
         titleField.add(lblTitle, BorderLayout.NORTH);
         titleField.add(txtTitle, BorderLayout.CENTER);
 
         JPanel authorField = new JPanel(new BorderLayout(0, 5));
-        authorField.setBackground(new Color(245, 245, 245));
+        authorField.setBackground(ThemeColors.cardBackground());
         authorField.add(lblAuthor, BorderLayout.NORTH);
         authorField.add(txtAuthor, BorderLayout.CENTER);
 
@@ -172,24 +169,24 @@ public class AddBookDialog extends JDialog {
 
         // Estado
         lblStatus.setAlignmentX(Component.LEFT_ALIGNMENT);
-        statusPanel.setBackground(new Color(245, 245, 245));
+        statusPanel.setBackground(ThemeColors.cardBackground());
         statusPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         statusPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 36));
 
         JButton[] statusBtns = { btnRead, btnReading, btnPending, btnWishlist };
         String[] statusStyles = {
-                "borderColor: #CCCCCC; hoverBorderColor: #7EC87A; hoverBackground: #E1F5DA; pressedBackground: #cee9c2",
-                "borderColor: #CCCCCC; hoverBorderColor: #A89AE8; hoverBackground: #e8e6fd; pressedBackground: #d0cbfa",
-                "borderColor: #CCCCCC; hoverBorderColor: #F5A623; hoverBackground: #FEF3DC; pressedBackground: #f7e5bd",
-                "borderColor: #CCCCCC; hoverBorderColor: #ED93B1; hoverBackground: #FBEAF0; pressedBackground: #f7d8e8"
+            "borderColor: #CCCCCC; hoverBorderColor: #7EC87A; hoverBackground: #E1F5DA; pressedBackground: #cee9c2",
+            "borderColor: #CCCCCC; hoverBorderColor: #A89AE8; hoverBackground: #e8e6fd; pressedBackground: #d0cbfa",
+            "borderColor: #CCCCCC; hoverBorderColor: #F5A623; hoverBackground: #FEF3DC; pressedBackground: #f7e5bd",
+            "borderColor: #CCCCCC; hoverBorderColor: #ED93B1; hoverBackground: #FBEAF0; pressedBackground: #f7d8e8"
         };
         for (int i = 0; i < statusBtns.length; i++) {
             JButton btn = statusBtns[i];
             btn.setFocusPainted(false);
             btn.setFocusable(false);
             btn.putClientProperty("JButton.buttonType", "roundRect");
-            btn.setBackground(new Color(240, 240, 240));
-            btn.setForeground(new Color(80, 80, 80));
+            btn.setBackground(ThemeColors.buttonBackground());
+            btn.setForeground(ThemeColors.textTertiary());
             btn.setMargin(new Insets(5, 10, 5, 10));
             btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
             btn.putClientProperty("FlatLaf.style", statusStyles[i]);
@@ -203,12 +200,12 @@ public class AddBookDialog extends JDialog {
 
         // Puntuación y fecha
         JButton[] starBtns = { btn1Star, btn2Star, btn3Star, btn4Star, btn5Star };
-        starsPanel.setBackground(new Color(245, 245, 245));
+        starsPanel.setBackground(ThemeColors.cardBackground());
         for (JButton btn : starBtns) {
             btn.setFocusPainted(false);
             btn.setFocusable(false);
-            btn.setBackground(new Color(250, 250, 250));
-            btn.setForeground(new Color(180, 180, 180));
+            btn.setBackground(ThemeColors.cardBackground());
+            btn.setForeground(ThemeColors.textSecondary());
             btn.putClientProperty("FlatLaf.style", "arc: 6; borderColor: #DDDDDD; hoverBorderColor: #DDDDDD");
             btn.setMargin(new Insets(4, 8, 4, 8));
             btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -216,7 +213,7 @@ public class AddBookDialog extends JDialog {
         }
 
         JPanel ratingField = new JPanel(new BorderLayout(0, 5));
-        ratingField.setBackground(new Color(245, 245, 245));
+        ratingField.setBackground(ThemeColors.cardBackground());
         ratingField.add(lblRating, BorderLayout.NORTH);
         ratingField.add(starsPanel, BorderLayout.CENTER);
 
@@ -224,11 +221,11 @@ public class AddBookDialog extends JDialog {
         txtDate.putClientProperty("JTextField.placeholderText", "Ej: 2/4/2024");
 
         JPanel dateField = new JPanel(new BorderLayout(0, 5));
-        dateField.setBackground(new Color(245, 245, 245));
+        dateField.setBackground(ThemeColors.cardBackground());
         dateField.add(lblDate, BorderLayout.NORTH);
         dateField.add(txtDate, BorderLayout.CENTER);
 
-        ratingPanel.setBackground(new Color(245, 245, 245));
+        ratingPanel.setBackground(ThemeColors.cardBackground());
         ratingPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         ratingPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
         ratingPanel.add(ratingField);
@@ -255,11 +252,11 @@ public class AddBookDialog extends JDialog {
 
         // FOOTER
         footerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 8, 24));
-        footerPanel.setBackground(new Color(245, 245, 245));
-        footerPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(220, 220, 220)));
+        footerPanel.setBackground(ThemeColors.cardBackground());
+        footerPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, ThemeColors.border()));
 
-        cancelBtn.setBackground(new Color(240, 240, 240));
-        cancelBtn.setForeground(new Color(80, 80, 80));
+        cancelBtn.setBackground(ThemeColors.buttonBackground());
+        cancelBtn.setForeground(ThemeColors.textTertiary());
         cancelBtn.setMargin(new Insets(8, 16, 8, 16));
         cancelBtn.setFocusPainted(false);
         cancelBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -302,13 +299,8 @@ public class AddBookDialog extends JDialog {
                 txtAuthor.putClientProperty("JTextField.placeholderText", "Buscando autor...");
                 debounceTimer.restart();
             }
-
-            public void removeUpdate(javax.swing.event.DocumentEvent e) {
-                debounceTimer.restart();
-            }
-
-            public void changedUpdate(javax.swing.event.DocumentEvent e) {
-            }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { debounceTimer.restart(); }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {}
         });
 
         btnRead.addActionListener(e -> setActiveStatus(btnRead));
@@ -365,8 +357,7 @@ public class AddBookDialog extends JDialog {
     }
 
     private String normalizeDate(String date) {
-        if (date.isEmpty())
-            return "";
+        if (date.isEmpty()) return "";
         String[] parts = date.split("/");
         String day = parts[0].length() == 1 ? "0" + parts[0] : parts[0];
         String month = parts[1].length() == 1 ? "0" + parts[1] : parts[1];
@@ -374,14 +365,10 @@ public class AddBookDialog extends JDialog {
     }
 
     private String getSelectedStatus() {
-        if (btnRead.getBackground().equals(new Color(225, 245, 218)))
-            return "LEIDO";
-        if (btnReading.getBackground().equals(new Color(238, 236, 254)))
-            return "LEYENDO";
-        if (btnPending.getBackground().equals(new Color(254, 243, 220)))
-            return "PROXIMO";
-        if (btnWishlist.getBackground().equals(new Color(251, 234, 240)))
-            return "QUIERO_LEER";
+        if (btnRead.getBackground().equals(new Color(225, 245, 218))) return "LEIDO";
+        if (btnReading.getBackground().equals(new Color(238, 236, 254))) return "LEYENDO";
+        if (btnPending.getBackground().equals(new Color(254, 243, 220))) return "PROXIMO";
+        if (btnWishlist.getBackground().equals(new Color(251, 234, 240))) return "QUIERO_LEER";
         return null;
     }
 
@@ -395,7 +382,7 @@ public class AddBookDialog extends JDialog {
                 stars[i].putClientProperty("FlatLaf.style", "arc: 6; borderColor: #EF9F27; hoverBorderColor: #EF9F27");
             } else {
                 stars[i].setText("☆");
-                stars[i].setForeground(new Color(180, 180, 180));
+                stars[i].setForeground(ThemeColors.textSecondary());
                 stars[i].putClientProperty("FlatLaf.style", "arc: 6; borderColor: #DDDDDD; hoverBorderColor: #DDDDDD");
             }
         }
@@ -408,20 +395,20 @@ public class AddBookDialog extends JDialog {
                 new Color(254, 243, 220), new Color(251, 234, 240)
         };
         String[] borderColors = { "#7EC87A", "#A89AE8", "#F5A623", "#ED93B1" };
-        String[] hoverColors = { "#7EC87A", "#A89AE8", "#F5A623", "#ED93B1" };
+        String[] hoverColors =  { "#7EC87A", "#A89AE8", "#F5A623", "#ED93B1" };
         String[] hoverBgColors = { "#E0F5D3", "#e8e6fd", "#FEF3DC", "#FBEAF0" };
         String[] pressedColors = { "#cee9c2", "#d0cbfa", "#f7e5bd", "#f7d8e8" };
 
         for (int i = 0; i < statusBtns.length; i++) {
             if (statusBtns[i] == activeBtn) {
                 statusBtns[i].setBackground(bgColors[i]);
-                statusBtns[i].setForeground(new Color(44, 44, 42));
+                statusBtns[i].setForeground(ThemeColors.textPrimary());
                 statusBtns[i].putClientProperty("FlatLaf.style",
                         "borderColor: " + borderColors[i] + "; hoverBorderColor: " + borderColors[i]
                                 + "; pressedBackground: " + pressedColors[i]);
             } else {
-                statusBtns[i].setBackground(new Color(240, 240, 240));
-                statusBtns[i].setForeground(new Color(80, 80, 80));
+                statusBtns[i].setBackground(ThemeColors.buttonBackground());
+                statusBtns[i].setForeground(ThemeColors.textTertiary());
                 statusBtns[i].putClientProperty("FlatLaf.style",
                         "borderColor: #CCCCCC; hoverBorderColor: " + hoverColors[i] + "; hoverBackground: "
                                 + hoverBgColors[i] + "; pressedBackground: " + pressedColors[i]);
