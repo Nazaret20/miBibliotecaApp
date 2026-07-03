@@ -6,6 +6,9 @@ import javax.swing.*;
 
 import com.formdev.flatlaf.icons.FlatSearchIcon;
 
+/**
+ * Utility class providing reusable UI component creation and styling methods.
+ */
 public class UIUtils {
     public static JButton createSmallButton(String text, Color bg, Color fg, Color border) {
         JButton btn = new JButton(text);
@@ -21,6 +24,10 @@ public class UIUtils {
         return btn;
     }
 
+    /**
+     * Creates a rounded statistics panel with a label and a value.
+     * Used in the main window to display book counts and average rating.
+     */
     public static JPanel createStatPanel(JLabel txtLabel, JLabel numLabel, Color backgroundColor) {
         JPanel card = new JPanel() {
             @Override

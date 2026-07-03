@@ -7,6 +7,12 @@ import com.prog.data.BookCoverFetcher;
 import com.prog.data.BookFile;
 import com.prog.model.Book;
 
+/**
+ * Dialog for adding or editing a book in the personal library.
+ * Includes fields for title, author, status, rating, date and notes.
+ * Automatically fetches the author from Google Books API as the user types the
+ * title.
+ */
 public class AddBookDialog extends JDialog {
 
     private JPanel mainPanel, headerPanel, bodyPanel, footerPanel;
@@ -23,6 +29,13 @@ public class AddBookDialog extends JDialog {
     private String dialogTitle, dialogSubtitle;
     private int selectedRating = 0;
 
+    /**
+     * Opens the dialog in edit mode with the book's existing data pre-filled.
+     * 
+     * @param parent   Parent window
+     * @param bookFile File handler for saving changes
+     * @param book     Book to edit
+     */
     public AddBookDialog(Window parent, BookFile bookFile, Book book) {
         super(parent, "Editar libro", true);
         this.dialogTitle = "Editar libro";
@@ -33,6 +46,12 @@ public class AddBookDialog extends JDialog {
         setVisible(true);
     }
 
+    /**
+     * Opens the dialog in add mode with empty fields.
+     * 
+     * @param parent   Parent window
+     * @param bookFile File handler for saving the new book
+     */
     public AddBookDialog(Window parent, BookFile bookFile) {
         super(parent, "Añadir libro", true);
         this.dialogTitle = "Añadir libro";
@@ -159,10 +178,10 @@ public class AddBookDialog extends JDialog {
 
         JButton[] statusBtns = { btnRead, btnReading, btnPending, btnWishlist };
         String[] statusStyles = {
-            "borderColor: #CCCCCC; hoverBorderColor: #7EC87A; hoverBackground: #E1F5DA; pressedBackground: #cee9c2",
-            "borderColor: #CCCCCC; hoverBorderColor: #A89AE8; hoverBackground: #e8e6fd; pressedBackground: #d0cbfa",
-            "borderColor: #CCCCCC; hoverBorderColor: #F5A623; hoverBackground: #FEF3DC; pressedBackground: #f7e5bd",
-            "borderColor: #CCCCCC; hoverBorderColor: #ED93B1; hoverBackground: #FBEAF0; pressedBackground: #f7d8e8"
+                "borderColor: #CCCCCC; hoverBorderColor: #7EC87A; hoverBackground: #E1F5DA; pressedBackground: #cee9c2",
+                "borderColor: #CCCCCC; hoverBorderColor: #A89AE8; hoverBackground: #e8e6fd; pressedBackground: #d0cbfa",
+                "borderColor: #CCCCCC; hoverBorderColor: #F5A623; hoverBackground: #FEF3DC; pressedBackground: #f7e5bd",
+                "borderColor: #CCCCCC; hoverBorderColor: #ED93B1; hoverBackground: #FBEAF0; pressedBackground: #f7d8e8"
         };
         for (int i = 0; i < statusBtns.length; i++) {
             JButton btn = statusBtns[i];
@@ -283,8 +302,13 @@ public class AddBookDialog extends JDialog {
                 txtAuthor.putClientProperty("JTextField.placeholderText", "Buscando autor...");
                 debounceTimer.restart();
             }
-            public void removeUpdate(javax.swing.event.DocumentEvent e) { debounceTimer.restart(); }
-            public void changedUpdate(javax.swing.event.DocumentEvent e) {}
+
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                debounceTimer.restart();
+            }
+
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+            }
         });
 
         btnRead.addActionListener(e -> setActiveStatus(btnRead));
@@ -341,7 +365,8 @@ public class AddBookDialog extends JDialog {
     }
 
     private String normalizeDate(String date) {
-        if (date.isEmpty()) return "";
+        if (date.isEmpty())
+            return "";
         String[] parts = date.split("/");
         String day = parts[0].length() == 1 ? "0" + parts[0] : parts[0];
         String month = parts[1].length() == 1 ? "0" + parts[1] : parts[1];
@@ -349,10 +374,14 @@ public class AddBookDialog extends JDialog {
     }
 
     private String getSelectedStatus() {
-        if (btnRead.getBackground().equals(new Color(225, 245, 218))) return "LEIDO";
-        if (btnReading.getBackground().equals(new Color(238, 236, 254))) return "LEYENDO";
-        if (btnPending.getBackground().equals(new Color(254, 243, 220))) return "PROXIMO";
-        if (btnWishlist.getBackground().equals(new Color(251, 234, 240))) return "QUIERO_LEER";
+        if (btnRead.getBackground().equals(new Color(225, 245, 218)))
+            return "LEIDO";
+        if (btnReading.getBackground().equals(new Color(238, 236, 254)))
+            return "LEYENDO";
+        if (btnPending.getBackground().equals(new Color(254, 243, 220)))
+            return "PROXIMO";
+        if (btnWishlist.getBackground().equals(new Color(251, 234, 240)))
+            return "QUIERO_LEER";
         return null;
     }
 
@@ -379,7 +408,7 @@ public class AddBookDialog extends JDialog {
                 new Color(254, 243, 220), new Color(251, 234, 240)
         };
         String[] borderColors = { "#7EC87A", "#A89AE8", "#F5A623", "#ED93B1" };
-        String[] hoverColors =  { "#7EC87A", "#A89AE8", "#F5A623", "#ED93B1" };
+        String[] hoverColors = { "#7EC87A", "#A89AE8", "#F5A623", "#ED93B1" };
         String[] hoverBgColors = { "#E0F5D3", "#e8e6fd", "#FEF3DC", "#FBEAF0" };
         String[] pressedColors = { "#cee9c2", "#d0cbfa", "#f7e5bd", "#f7d8e8" };
 

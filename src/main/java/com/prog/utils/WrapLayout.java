@@ -5,6 +5,10 @@ import java.awt.*;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 
+/**
+ * A FlowLayout extension that correctly calculates the preferred size
+ * when used inside a JScrollPane, enabling proper line wrapping.
+ */
 public class WrapLayout extends FlowLayout {
 
     public WrapLayout(int align, int hgap, int vgap) {

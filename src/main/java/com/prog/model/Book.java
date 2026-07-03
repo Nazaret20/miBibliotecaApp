@@ -1,9 +1,26 @@
 package com.prog.model;
 
+/**
+ * Represents a book in the personal library.
+ * Contains all data associated with a book such as title, author, status,
+ * rating and cover.
+ */
 public class Book {
     private int id, rating;
     private String title, author, notes, date, status, coverURL;
 
+    /**
+     * Creates a new book with all its data.
+     * 
+     * @param id       Unique identifier of the book
+     * @param title    Title of the book
+     * @param author   Author of the book
+     * @param rating   Rating from 1 to 5, 0 if not rated
+     * @param notes    Personal notes about the book
+     * @param date     Reading date in dd/mm/yyyy format, empty if not applicable
+     * @param status   Book status: LEIDO, LEYENDO, PROXIMO or QUIERO_LEER
+     * @param coverURL Cover URL obtained from Google Books, empty if not fetched
+     */
     public Book(int id, String title, String author, int rating, String notes, String date, String status,
             String coverURL) {
         this.id = id;

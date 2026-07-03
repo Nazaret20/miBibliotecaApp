@@ -5,6 +5,10 @@ import java.util.ArrayList;
 
 import com.prog.model.Book;
 
+/**
+ * Handles persistence of books using a plain text file.
+ * Each line in the file represents a book with fields separated by commas.
+ */
 public class BookFile {
     private ArrayList<Book> bookList;
 
@@ -17,6 +21,11 @@ public class BookFile {
     }
 
     /*----------------------------MODIFY------------------------------ */
+    /**
+     * Deletes a book from the list and updates the file.
+     * 
+     * @param id Unique identifier of the book to delete
+     */
     public void deleteBook(int id) throws Exception {
         for (Book book : bookList) {
             if (book.getId() == id) {
@@ -41,10 +50,16 @@ public class BookFile {
         return bookList;
     }
 
+    /**
+     * Sorts the book list by reading date, most recent first.
+     * Books without a date are placed at the end.
+     */
     public void sortByDate() {
         bookList.sort((a, b) -> {
-            if (a.getDate().isEmpty()) return 1;
-            if (b.getDate().isEmpty()) return -1;
+            if (a.getDate().isEmpty())
+                return 1;
+            if (b.getDate().isEmpty())
+                return -1;
             String[] partsA = a.getDate().split("/");
             String[] partsB = b.getDate().split("/");
             String dateA = partsA[2] + partsA[1] + partsA[0];
@@ -63,7 +78,8 @@ public class BookFile {
         try (BufferedReader br = new BufferedReader(new FileReader("books.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
-                if (line.trim().isEmpty()) continue;
+                if (line.trim().isEmpty())
+                    continue;
                 try {
                     String[] parts = line.split(",", -1);
                     int id = Integer.parseInt(parts[0]);

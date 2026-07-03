@@ -6,8 +6,17 @@ import java.util.Properties;
 
 import com.google.gson.*;
 
+/**
+ * Fetches book data from the Google Books API.
+ */
 public class BookCoverFetcher {
 
+    /**
+     * Fetches the cover URL of a book by its title.
+     * 
+     * @param title Title of the book to search
+     * @return URL of the book cover, or null if not found
+     */
     public static String fetchCoverUrl(String title) {
         try {
             JsonObject volumeInfo = fetchVolumeInfo(title);
@@ -23,6 +32,12 @@ public class BookCoverFetcher {
         return null;
     }
 
+    /**
+     * Fetches the author of a book by its title.
+     * 
+     * @param title Title of the book to search
+     * @return Name of the first author, or null if not found
+     */
     public static String fetchAuthor(String title) {
         try {
             JsonObject volumeInfo = fetchVolumeInfo(title);

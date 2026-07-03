@@ -8,6 +8,13 @@ import com.prog.model.Book;
 import com.prog.utils.UIUtils;
 import com.prog.utils.WrapLayout;
 
+/**
+ * Main application window for the personal library manager.
+ * Displays book cards in a grid layout with filtering, sorting and search
+ * capabilities.
+ * Connects to {@link BookFile} for data persistence and {@link BookCard} for
+ * card rendering.
+ */
 public class Window extends JFrame {
     private BookFile bookFile;
     private JPanel principal;
@@ -247,9 +254,16 @@ public class Window extends JFrame {
         });
 
         txtSearch.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-            public void insertUpdate(javax.swing.event.DocumentEvent e) { searchBooks(); }
-            public void removeUpdate(javax.swing.event.DocumentEvent e) { searchBooks(); }
-            public void changedUpdate(javax.swing.event.DocumentEvent e) {}
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                searchBooks();
+            }
+
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                searchBooks();
+            }
+
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+            }
         });
 
         addWindowStateListener(e -> {
@@ -307,6 +321,10 @@ public class Window extends JFrame {
         loadBooks(currentFilter);
     }
 
+    /**
+     * Reloads all books from the file and refreshes the card grid.
+     * Called by {@link AddBookDialog} after adding or editing a book.
+     */
     public void refreshBooks() {
         loadBooks("ALL");
     }
@@ -332,7 +350,8 @@ public class Window extends JFrame {
     }
 
     private void showEmptyState() {
-        String msg = bookFile.getBookList().isEmpty() ? "Tu biblioteca está vacía" : "No tienes libros en esta categoría";
+        String msg = bookFile.getBookList().isEmpty() ? "Tu biblioteca está vacía"
+                : "No tienes libros en esta categoría";
         String sub = bookFile.getBookList().isEmpty() ? "Añade tu primer libro para empezar" : "Prueba con otro filtro";
 
         JPanel emptyPanel = new JPanel();
@@ -375,7 +394,7 @@ public class Window extends JFrame {
                 new Color(230, 241, 251)
         };
         String[] borderColors = { "#7EC87A", "#F5A623", "#ED93B1", "#A89AE8", "#85B7EB" };
-        String[] hoverColors =  { "#7EC87A", "#F5A623", "#ED93B1", "#A89AE8", "#85B7EB" };
+        String[] hoverColors = { "#7EC87A", "#F5A623", "#ED93B1", "#A89AE8", "#85B7EB" };
         String[] hoverBgColors = { "#E0F5D3", "#FEF3DC", "#FBEAF0", "#e8e6fd", "#E6F1FB" };
         String[] pressedColors = { "#cee9c2", "#f7e5bd", "#f7d8e8", "#d8d3ff", "#c8dff3" };
 

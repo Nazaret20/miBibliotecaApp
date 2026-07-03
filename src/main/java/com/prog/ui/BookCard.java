@@ -9,8 +9,24 @@ import com.prog.data.BookFile;
 import com.prog.model.Book;
 import com.prog.utils.UIUtils;
 
+/**
+ * Visual card component representing a single book in the library grid.
+ * Displays title, author, rating, notes, date, status and optionally the book
+ * cover.
+ * Cover images are fetched from Google Books API and cached locally.
+ */
 public class BookCard extends JPanel {
 
+    /**
+     * Creates a new book card with all its visual components.
+     * 
+     * @param book      Book data to display
+     * @param bookFile  File handler used for delete and edit operations
+     * @param window    Parent window, used to refresh the grid after changes
+     * @param cardWidth Width of the card in pixels
+     * @param showCover Whether to fetch and display the book cover (only in
+     *                  maximized window)
+     */
     public BookCard(Book book, BookFile bookFile, Window window, int cardWidth, boolean showCover) {
         setOpaque(false);
         setBackground(new Color(250, 250, 250));
@@ -84,8 +100,10 @@ public class BookCard extends JPanel {
         dateLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         // Action buttons
-        JButton editBtn = UIUtils.createSmallButton("Editar", new Color(245, 245, 245), new Color(80, 80, 80), new Color(200, 200, 200));
-        JButton deleteBtn = UIUtils.createSmallButton("Eliminar", new Color(251, 234, 240), new Color(114, 36, 62), new Color(237, 147, 177));
+        JButton editBtn = UIUtils.createSmallButton("Editar", new Color(245, 245, 245), new Color(80, 80, 80),
+                new Color(200, 200, 200));
+        JButton deleteBtn = UIUtils.createSmallButton("Eliminar", new Color(251, 234, 240), new Color(114, 36, 62),
+                new Color(237, 147, 177));
 
         JPanel actionsPanel = new JPanel();
         actionsPanel.setLayout(new BoxLayout(actionsPanel, BoxLayout.X_AXIS));
@@ -143,7 +161,8 @@ public class BookCard extends JPanel {
         }
 
         deleteBtn.addActionListener(e -> {
-            int confirm = JOptionPane.showConfirmDialog(null, "¿Eliminar este libro?", "Confirmar", JOptionPane.YES_NO_OPTION);
+            int confirm = JOptionPane.showConfirmDialog(null, "¿Eliminar este libro?", "Confirmar",
+                    JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) {
                 try {
                     bookFile.deleteBook(book.getId());
@@ -182,14 +201,15 @@ public class BookCard extends JPanel {
 
     private Object[] getStatusInfo(String status) {
         return switch (status) {
-            case "LEIDO" -> new Object[]{ new Color(225, 245, 238), new Color(8, 80, 65), "✓ Leído" };
-            case "LEYENDO" -> new Object[]{ new Color(238, 236, 254), new Color(80, 60, 180), "📖 Leyendo" };
-            case "PROXIMO" -> new Object[]{ new Color(250, 238, 218), new Color(99, 56, 6), "🕒 Próximamente" };
-            default -> new Object[]{ new Color(251, 234, 240), new Color(114, 36, 62), "♡ Quiero leer" };
+            case "LEIDO" -> new Object[] { new Color(225, 245, 238), new Color(8, 80, 65), "✓ Leído" };
+            case "LEYENDO" -> new Object[] { new Color(238, 236, 254), new Color(80, 60, 180), "📖 Leyendo" };
+            case "PROXIMO" -> new Object[] { new Color(250, 238, 218), new Color(99, 56, 6), "🕒 Próximamente" };
+            default -> new Object[] { new Color(251, 234, 240), new Color(114, 36, 62), "♡ Quiero leer" };
         };
     }
 
-    private void loadCover(Book book, BookFile bookFile, JLabel coverLabel, JProgressBar progressBar, JPanel rightPanel) {
+    private void loadCover(Book book, BookFile bookFile, JLabel coverLabel, JProgressBar progressBar,
+            JPanel rightPanel) {
         new Thread(() -> {
             java.io.File cacheFile = new java.io.File("cache/" + book.getId() + ".jpg");
 
