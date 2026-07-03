@@ -4,29 +4,18 @@ import java.awt.*;
 
 import javax.swing.*;
 import com.formdev.flatlaf.FlatLightLaf;
+import com.prog.ui.Window;
 
 public class Main {
     public static void main(String[] args) {
-        try {
-            UIManager.setLookAndFeel(new FlatLightLaf());
-            UIManager.put("Label.font", new Font("Nunito", Font.PLAIN, 14));
-            UIManager.put("Button.font", new Font("Nunito", Font.PLAIN, 14));
-            UIManager.put("TextField.font", new Font("Nunito", Font.PLAIN, 14));
-            UIManager.put("TextArea.font", new Font("Nunito", Font.PLAIN, 14));
-            UIManager.put("ComboBox.font", new Font("Nunito", Font.PLAIN, 14));
-            UIManager.put("Panel.font", new Font("Nunito", Font.PLAIN, 14));
-            UIManager.put("ProgressBar.font", new Font("Nunito", Font.PLAIN, 14));
-            UIManager.put("OptionPane.font", new Font("Nunito", Font.PLAIN, 14));
-            UIManager.put("OptionPane.messageFont", new Font("Nunito", Font.PLAIN, 14));
-            UIManager.put("OptionPane.buttonFont", new Font("Nunito", Font.PLAIN, 14));
-            UIManager.put("OptionPane.yesButtonText", "Sí");
-            UIManager.put("OptionPane.noButtonText", "No");
-            UIManager.put("OptionPane.cancelButtonText", "Cancelar");
-            UIManager.put("OptionPane.okButtonText", "Aceptar");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        setupUI();
+        SwingUtilities.invokeLater(() -> {
+            Window window = new Window();
+            window.setVisible(true);
+        });
+    }
 
+    private static void setupUI() {
         try {
             Font regular = Font.createFont(Font.TRUETYPE_FONT,
                     Main.class.getResourceAsStream("/fonts/Nunito-VariableFont_wght.ttf"));
@@ -35,13 +24,25 @@ public class Main {
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(regular);
             ge.registerFont(bold);
+
+            UIManager.setLookAndFeel(new FlatLightLaf());
+            Font nunito = new Font("Nunito", Font.PLAIN, 14);
+            String[] fontKeys = {
+                    "Label.font", "Button.font", "TextField.font", "TextArea.font",
+                    "ComboBox.font", "Panel.font", "ProgressBar.font",
+                    "OptionPane.font", "OptionPane.messageFont", "OptionPane.buttonFont"
+            };
+
+            for (String key : fontKeys) {
+                UIManager.put(key, nunito);
+            }
+
+            UIManager.put("OptionPane.yesButtonText", "Sí");
+            UIManager.put("OptionPane.noButtonText", "No");
+            UIManager.put("OptionPane.cancelButtonText", "Cancelar");
+            UIManager.put("OptionPane.okButtonText", "Aceptar");
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        SwingUtilities.invokeLater(() -> {
-            Window window = new Window();
-            window.setVisible(true);
-        });
     }
 }

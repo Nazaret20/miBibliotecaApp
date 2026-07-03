@@ -1,10 +1,11 @@
-package com.prog;
+package com.prog.model;
 
 public class Book {
     private int id, rating;
     private String title, author, notes, date, status, coverURL;
 
-    public Book(int id, String title, String author, int rating, String notes, String date, String status, String coverURL) {
+    public Book(int id, String title, String author, int rating, String notes, String date, String status,
+            String coverURL) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -18,7 +19,7 @@ public class Book {
     @Override
     public String toString() {
         return "Book [id=" + id + ", title=" + title + ", author=" + author + ", rating=" + rating + ", notes=" + notes
-                + ", date=" + date + ", status=" + status + "]";
+                + ", date=" + date + ", status=" + status + ", coverURL=" + coverURL + "]";
     }
 
     public int getId() {

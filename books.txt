@@ -1,2 +1,10 @@
-1,El día que se perdió la cordura,Javier Castillo,4,Guay,,LEIDO,http://books.google.com/books/content?id=HGa1DQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api
-2,asdfa,asdfa,3,asdasdf,,LEYENDO,
+10,1984,George Orwell,0,,,QUIERO_LEER,http://books.google.com/books/content?id=MMJHNjLtbOQC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api
+2,Cien años de soledad,Gabriel García Márquez,5,Un clásico imprescindible,15/06/2022,LEIDO,
+5,Dune,Frank Herbert,4,Muy denso pero fascinante,,LEYENDO,
+1,El nombre del viento,Patrick Rothfuss,5,Una obra maestra,10/03/2023,LEIDO,
+6,El principito,Antoine de Saint-Exupéry,4,Poético y profundo,,LEYENDO,
+8,El problema de los tres cuerpos,Liu Cixin,0,,,PROXIMO,http://books.google.com/books/content?id=ib_UDAAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api
+4,Harry Potter y la piedra filosofal,J.K. Rowling,5,Un clásico de la infancia,05/07/2021,LEIDO,
+3,La ladrona de libros,Markus Zusak,4,Me hizo llorar,20/01/2024,LEIDO,
+7,La rueda del tiempo,Robert Jordan,0,,,PROXIMO,
+9,Sapiens,Yuval Noah Harari,0,,,QUIERO_LEER,http://books.google.com/books/content?id=qmj7AwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api

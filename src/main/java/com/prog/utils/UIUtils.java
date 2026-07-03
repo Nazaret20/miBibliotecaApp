@@ -1,4 +1,4 @@
-package com.prog;
+package com.prog.utils;
 
 import java.awt.*;
 

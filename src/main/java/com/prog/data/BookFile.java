@@ -1,13 +1,15 @@
-package com.prog;
+package com.prog.data;
 
 import java.io.*;
 import java.util.ArrayList;
+
+import com.prog.model.Book;
 
 public class BookFile {
     private ArrayList<Book> bookList;
 
     public BookFile() throws Exception {
-        java.io.File file = new java.io.File("books.txt");
+        File file = new File("books.txt");
         if (!file.exists()) {
             file.createNewFile();
         }
@@ -41,10 +43,8 @@ public class BookFile {
 
     public void sortByDate() {
         bookList.sort((a, b) -> {
-            if (a.getDate().isEmpty())
-                return 1;
-            if (b.getDate().isEmpty())
-                return -1;
+            if (a.getDate().isEmpty()) return 1;
+            if (b.getDate().isEmpty()) return -1;
             String[] partsA = a.getDate().split("/");
             String[] partsB = b.getDate().split("/");
             String dateA = partsA[2] + partsA[1] + partsA[0];
@@ -53,20 +53,22 @@ public class BookFile {
         });
     }
 
+    public void sortByTitle() {
+        bookList.sort((a, b) -> a.getTitle().compareToIgnoreCase(b.getTitle()));
+    }
+
     /*----------------------------PERSISTENCE------------------------------ */
     public ArrayList<Book> readFile() throws Exception {
         ArrayList<Book> list = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader("books.txt"))) {
-            String line = "";
+            String line;
             while ((line = br.readLine()) != null) {
-                if (line.trim().isEmpty())
-                    continue;
+                if (line.trim().isEmpty()) continue;
                 try {
                     String[] parts = line.split(",", -1);
                     int id = Integer.parseInt(parts[0]);
                     int rating = Integer.parseInt(parts[3]);
-                    Book book = new Book(id, parts[1], parts[2], rating, parts[4], parts[5], parts[6], parts[7]);
-                    list.add(book);
+                    list.add(new Book(id, parts[1], parts[2], rating, parts[4], parts[5], parts[6], parts[7]));
                 } catch (Exception e) {
                     System.out.println("Error al leer línea: " + line);
                 }
@@ -77,8 +79,7 @@ public class BookFile {
 
     public void writeFile(Book book) throws Exception {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter("books.txt", true))) {
-            bw.write(book.getId() + "," + book.getTitle() + "," + book.getAuthor() + "," + book.getRating()
-                    + "," + book.getNotes() + "," + book.getDate() + "," + book.getStatus() + "," + book.getCoverURL());
+            bw.write(bookToLine(book));
             bw.newLine();
         }
     }
@@ -86,15 +87,14 @@ public class BookFile {
     public void rewriteFile() throws Exception {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter("books.txt"))) {
             for (Book book : bookList) {
-                bw.write(book.getId() + "," + book.getTitle() + "," + book.getAuthor() + "," + book.getRating()
-                        + "," + book.getNotes() + "," + book.getDate() + "," + book.getStatus() + ","
-                        + book.getCoverURL());
+                bw.write(bookToLine(book));
                 bw.newLine();
             }
         }
     }
 
-    public void sortByTitle() {
-        bookList.sort((a, b) -> a.getTitle().compareToIgnoreCase(b.getTitle()));
+    private String bookToLine(Book book) {
+        return book.getId() + "," + book.getTitle() + "," + book.getAuthor() + "," + book.getRating()
+                + "," + book.getNotes() + "," + book.getDate() + "," + book.getStatus() + "," + book.getCoverURL();
     }
 }

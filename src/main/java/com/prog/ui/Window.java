@@ -1,7 +1,12 @@
-package com.prog;
+package com.prog.ui;
 
 import java.awt.*;
 import javax.swing.*;
+
+import com.prog.data.BookFile;
+import com.prog.model.Book;
+import com.prog.utils.UIUtils;
+import com.prog.utils.WrapLayout;
 
 public class Window extends JFrame {
     private BookFile bookFile;
@@ -29,7 +34,7 @@ public class Window extends JFrame {
     private JPanel cardsPanel, centerContent;
     private JScrollPane scroll;
 
-    // Needs
+    // State
     private String currentFilter = "ALL";
     private int cardWidth = 269;
     private boolean isMaximized = false;
@@ -49,7 +54,6 @@ public class Window extends JFrame {
     private void setUpLayout() {
         principal = new JPanel(new BorderLayout());
 
-        // HEADER
         header = new JPanel(new BorderLayout());
         headerWest = new JPanel(new GridLayout(2, 1, 5, 5));
         title = new JLabel("Mi biblioteca personal");
@@ -57,10 +61,8 @@ public class Window extends JFrame {
         headerEast = new JPanel();
         addBookBtn = new JButton("➕ Añadir libro");
 
-        // MAIN
         main = new JPanel(new BorderLayout());
 
-        // Statistics
         stats = new JPanel(new GridLayout(1, 4, 10, 0));
         numRead = new JLabel();
         numAvg = new JLabel();
@@ -75,7 +77,6 @@ public class Window extends JFrame {
         wishlist = new JPanel();
         avgRating = new JPanel();
 
-        // Filters
         filtersPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         btnRead = new JButton("Leídos");
         btnPending = new JButton("Próximamente");
@@ -85,7 +86,6 @@ public class Window extends JFrame {
         combo = new JComboBox<>(new String[] { "Fecha", "Título" });
         txtSearch = new JTextField();
 
-        // Cards
         cardsPanel = new JPanel(new WrapLayout(FlowLayout.CENTER, 15, 15));
         scroll = new JScrollPane(cardsPanel);
         centerContent = new JPanel(new BorderLayout());
@@ -95,9 +95,7 @@ public class Window extends JFrame {
     private void initComponents() {
         setTitle("Mi biblioteca");
         setSize(900, 700);
-
-        ImageIcon appIcon = new ImageIcon(getClass().getResource("/icons/bibliotecaIcon.png"));
-        setIconImage(appIcon.getImage());
+        setIconImage(new ImageIcon(getClass().getResource("/icons/bibliotecaIcon.png")).getImage());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         principal.setBackground(new Color(245, 245, 245));
@@ -116,7 +114,6 @@ public class Window extends JFrame {
         headerWest.add(title);
         title.setFont(new Font("Nunito", Font.BOLD, 22));
         title.setForeground(new Color(44, 44, 42));
-
         headerWest.add(subtitle);
         subtitle.setFont(new Font("Nunito", Font.PLAIN, 13));
         subtitle.setForeground(new Color(136, 135, 128));
@@ -172,8 +169,6 @@ public class Window extends JFrame {
         filtersPanel.setBackground(new Color(245, 245, 245));
         filtersPanel.setBorder(BorderFactory.createEmptyBorder(16, 12, 8, 16));
         filtersPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        UIUtils.styleComboBox(combo);
-        UIUtils.styleSearchField(txtSearch);
 
         setupFilterButton(btnRead, "#7EC87A", "#E1F5DA", "#cee9c2");
         setupFilterButton(btnPending, "#F5A623", "#FEF3DC", "#f7e5bd");
@@ -189,6 +184,9 @@ public class Window extends JFrame {
         filtersPanel.add(combo);
         filtersPanel.add(txtSearch);
 
+        UIUtils.styleComboBox(combo);
+        UIUtils.styleSearchField(txtSearch);
+
         // Cards
         centerContent.add(filtersPanel, BorderLayout.NORTH);
         centerContent.add(scroll, BorderLayout.CENTER);
@@ -199,6 +197,8 @@ public class Window extends JFrame {
         scroll.setAlignmentX(Component.LEFT_ALIGNMENT);
         scroll.getViewport().setBackground(new Color(245, 245, 245));
         scroll.getVerticalScrollBar().setUnitIncrement(16);
+        scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scroll.getViewport().addComponentListener(new java.awt.event.ComponentAdapter() {
             @Override
             public void componentResized(java.awt.event.ComponentEvent e) {
@@ -209,8 +209,6 @@ public class Window extends JFrame {
         cardsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         cardsPanel.setBackground(new Color(245, 245, 245));
         cardsPanel.setBorder(null);
-        scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         loadBooks("ALL");
         setLocationRelativeTo(null);
@@ -233,32 +231,12 @@ public class Window extends JFrame {
     private void setUpListeners() {
         addBookBtn.addActionListener(e -> new AddBookDialog(this, bookFile));
 
-        btnRead.addActionListener(e -> {
-            setActiveFilter(btnRead);
-            currentFilter = "LEIDO";
-            loadBooks("LEIDO");
-        });
-        btnPending.addActionListener(e -> {
-            setActiveFilter(btnPending);
-            currentFilter = "PROXIMO";
-            loadBooks("PROXIMO");
-        });
-        btnWishlist.addActionListener(e -> {
-            setActiveFilter(btnWishlist);
-            currentFilter = "QUIERO_LEER";
-            loadBooks("QUIERO_LEER");
-        });
+        setupFilterListener(btnRead, "LEIDO");
+        setupFilterListener(btnPending, "PROXIMO");
+        setupFilterListener(btnWishlist, "QUIERO_LEER");
+        setupFilterListener(btnReading, "LEYENDO");
+        setupFilterListener(btnAll, "ALL");
 
-        btnReading.addActionListener(e -> {
-            setActiveFilter(btnReading);
-            currentFilter = "LEYENDO";
-            loadBooks("LEYENDO");
-        });
-        btnAll.addActionListener(e -> {
-            setActiveFilter(btnAll);
-            currentFilter = "ALL";
-            loadBooks("ALL");
-        });
         combo.addActionListener(e -> {
             if (combo.getSelectedItem().equals("Título")) {
                 bookFile.sortByTitle();
@@ -269,16 +247,9 @@ public class Window extends JFrame {
         });
 
         txtSearch.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-            public void insertUpdate(javax.swing.event.DocumentEvent e) {
-                searchBooks();
-            }
-
-            public void removeUpdate(javax.swing.event.DocumentEvent e) {
-                searchBooks();
-            }
-
-            public void changedUpdate(javax.swing.event.DocumentEvent e) {
-            }
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { searchBooks(); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { searchBooks(); }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {}
         });
 
         addWindowStateListener(e -> {
@@ -287,7 +258,6 @@ public class Window extends JFrame {
                 SwingUtilities.invokeLater(() -> {
                     int width = (scroll.getViewport().getWidth() - 65) / 4;
                     updateCardSize(width);
-                    loadBooks(currentFilter);
                 });
             } else {
                 isMaximized = false;
@@ -304,13 +274,21 @@ public class Window extends JFrame {
                 principal.requestFocusInWindow();
             }
         };
-
         principal.addMouseListener(focusAway);
         main.addMouseListener(focusAway);
         stats.addMouseListener(focusAway);
         cardsPanel.addMouseListener(focusAway);
     }
 
+    private void setupFilterListener(JButton btn, String filter) {
+        btn.addActionListener(e -> {
+            setActiveFilter(btn);
+            currentFilter = filter;
+            loadBooks(filter);
+        });
+    }
+
+    /*----------------------------LOGIC----------------------------- */
     private void searchBooks() {
         String query = txtSearch.getText().trim().toLowerCase();
         cardsPanel.removeAll();
@@ -336,6 +314,7 @@ public class Window extends JFrame {
     private void loadBooks(String filter) {
         updateStats();
         cardsPanel.removeAll();
+
         for (Book book : bookFile.getBookList()) {
             if (filter.equals("ALL") || book.getStatus().equals(filter)) {
                 cardsPanel.add(new BookCard(book, bookFile, this, cardWidth, isMaximized));
@@ -343,47 +322,47 @@ public class Window extends JFrame {
         }
 
         if (cardsPanel.getComponentCount() == 0) {
-            String emptyMsg = bookFile.getBookList().isEmpty()
-                    ? "Tu biblioteca está vacía"
-                    : "No tienes libros en esta categoría";
-            String emptySub = bookFile.getBookList().isEmpty()
-                    ? "Añade tu primer libro para empezar"
-                    : "Prueba con otro filtro";
-            JPanel emptyPanel = new JPanel();
-            emptyPanel.setLayout(new BoxLayout(emptyPanel, BoxLayout.Y_AXIS));
-            emptyPanel.setOpaque(false);
-            emptyPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-            JLabel icon = new JLabel("📚");
-            icon.setFont(icon.getFont().deriveFont(60f));
-            icon.setForeground(new Color(110, 110, 110));
-            icon.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-            JLabel msg = new JLabel(emptyMsg);
-            msg.setFont(new Font("Nunito", Font.BOLD, 18));
-            msg.setForeground(new Color(100, 100, 100));
-            msg.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-            JLabel sub = new JLabel(emptySub);
-            sub.setForeground(new Color(100, 100, 100));
-            sub.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-            emptyPanel.add(Box.createVerticalGlue());
-            emptyPanel.add(icon);
-            emptyPanel.add(Box.createVerticalStrut(12));
-            emptyPanel.add(msg);
-            emptyPanel.add(Box.createVerticalStrut(6));
-            emptyPanel.add(sub);
-            emptyPanel.add(Box.createVerticalGlue());
-
-            cardsPanel.setLayout(new BorderLayout());
-            cardsPanel.add(emptyPanel, BorderLayout.CENTER);
+            showEmptyState();
         } else {
             cardsPanel.setLayout(new WrapLayout(FlowLayout.CENTER, 10, 10));
         }
 
         cardsPanel.revalidate();
         cardsPanel.repaint();
+    }
+
+    private void showEmptyState() {
+        String msg = bookFile.getBookList().isEmpty() ? "Tu biblioteca está vacía" : "No tienes libros en esta categoría";
+        String sub = bookFile.getBookList().isEmpty() ? "Añade tu primer libro para empezar" : "Prueba con otro filtro";
+
+        JPanel emptyPanel = new JPanel();
+        emptyPanel.setLayout(new BoxLayout(emptyPanel, BoxLayout.Y_AXIS));
+        emptyPanel.setOpaque(false);
+
+        JLabel icon = new JLabel("📚");
+        icon.setFont(icon.getFont().deriveFont(60f));
+        icon.setForeground(new Color(110, 110, 110));
+        icon.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel msgLabel = new JLabel(msg);
+        msgLabel.setFont(new Font("Nunito", Font.BOLD, 18));
+        msgLabel.setForeground(new Color(100, 100, 100));
+        msgLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel subLabel = new JLabel(sub);
+        subLabel.setForeground(new Color(100, 100, 100));
+        subLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        emptyPanel.add(Box.createVerticalGlue());
+        emptyPanel.add(icon);
+        emptyPanel.add(Box.createVerticalStrut(12));
+        emptyPanel.add(msgLabel);
+        emptyPanel.add(Box.createVerticalStrut(6));
+        emptyPanel.add(subLabel);
+        emptyPanel.add(Box.createVerticalGlue());
+
+        cardsPanel.setLayout(new BorderLayout());
+        cardsPanel.add(emptyPanel, BorderLayout.CENTER);
     }
 
     private void setActiveFilter(JButton activeBtn) {
@@ -396,7 +375,7 @@ public class Window extends JFrame {
                 new Color(230, 241, 251)
         };
         String[] borderColors = { "#7EC87A", "#F5A623", "#ED93B1", "#A89AE8", "#85B7EB" };
-        String[] hoverColors = { "#7EC87A", "#F5A623", "#ED93B1", "#A89AE8", "#85B7EB" };
+        String[] hoverColors =  { "#7EC87A", "#F5A623", "#ED93B1", "#A89AE8", "#85B7EB" };
         String[] hoverBgColors = { "#E0F5D3", "#FEF3DC", "#FBEAF0", "#e8e6fd", "#E6F1FB" };
         String[] pressedColors = { "#cee9c2", "#f7e5bd", "#f7d8e8", "#d8d3ff", "#c8dff3" };
 
@@ -419,14 +398,14 @@ public class Window extends JFrame {
     }
 
     private void updateStats() {
-        int read = 0, pending = 0, wishlist = 0;
+        int readCount = 0, pendingCount = 0, wishlistCount = 0;
         int totalRating = 0, ratedBooks = 0;
 
         for (Book book : bookFile.getBookList()) {
             switch (book.getStatus()) {
-                case "LEIDO" -> read++;
-                case "PROXIMO" -> pending++;
-                case "QUIERO_LEER" -> wishlist++;
+                case "LEIDO" -> readCount++;
+                case "PROXIMO" -> pendingCount++;
+                case "QUIERO_LEER" -> wishlistCount++;
             }
             if (book.getRating() > 0) {
                 totalRating += book.getRating();
@@ -434,10 +413,9 @@ public class Window extends JFrame {
             }
         }
 
-        numRead.setText(String.valueOf(read));
-        numPending.setText(String.valueOf(pending));
-        numWishlist.setText(String.valueOf(wishlist));
+        numRead.setText(String.valueOf(readCount));
+        numPending.setText(String.valueOf(pendingCount));
+        numWishlist.setText(String.valueOf(wishlistCount));
         numAvg.setText(ratedBooks > 0 ? String.format("%.1f", (double) totalRating / ratedBooks) : "-");
     }
-
 }

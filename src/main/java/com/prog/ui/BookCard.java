@@ -1,8 +1,13 @@
-package com.prog;
+package com.prog.ui;
 
 import java.awt.*;
 import java.net.*;
 import javax.swing.*;
+
+import com.prog.data.BookCoverFetcher;
+import com.prog.data.BookFile;
+import com.prog.model.Book;
+import com.prog.utils.UIUtils;
 
 public class BookCard extends JPanel {
 
@@ -13,46 +18,14 @@ public class BookCard extends JPanel {
         setPreferredSize(new Dimension(cardWidth, 250));
         setBorder(BorderFactory.createEmptyBorder(12, 14, 12, 14));
 
-        // Color bar - NORTH
-        JPanel colorBar = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(getBackground());
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
-                g2.dispose();
-            }
-        };
-        colorBar.setPreferredSize(new Dimension(100, 6));
-        colorBar.setMinimumSize(new Dimension(0, 6));
-        colorBar.setMaximumSize(new Dimension(Integer.MAX_VALUE, 6));
-        colorBar.setBackground(switch (book.getStatus()) {
-            case "LEIDO" -> new Color(95, 202, 165);
-            case "LEYENDO" -> new Color(168, 154, 232);
-            case "PROXIMO" -> new Color(250, 199, 117);
-            default -> new Color(237, 147, 177);
-        });
+        // Color bar
+        JPanel colorBar = createColorBar(book.getStatus());
 
         // Status pill
-        Color statusBg = switch (book.getStatus()) {
-            case "LEIDO" -> new Color(225, 245, 238);
-            case "LEYENDO" -> new Color(238, 236, 254);
-            case "PROXIMO" -> new Color(250, 238, 218);
-            default -> new Color(251, 234, 240);
-        };
-        Color statusFg = switch (book.getStatus()) {
-            case "LEIDO" -> new Color(8, 80, 65);
-            case "LEYENDO" -> new Color(80, 60, 180);
-            case "PROXIMO" -> new Color(99, 56, 6);
-            default -> new Color(114, 36, 62);
-        };
-        String statusText = switch (book.getStatus()) {
-            case "LEIDO" -> "✓ Leído";
-            case "LEYENDO" -> "📖 Leyendo";
-            case "PROXIMO" -> "🕒 Próximamente";
-            default -> "♡ Quiero leer";
-        };
+        Object[] statusInfo = getStatusInfo(book.getStatus());
+        Color statusBg = (Color) statusInfo[0];
+        Color statusFg = (Color) statusInfo[1];
+        String statusText = (String) statusInfo[2];
 
         JPanel statusPill = new JPanel() {
             @Override
@@ -88,8 +61,7 @@ public class BookCard extends JPanel {
         authorLabel.setForeground(new Color(136, 135, 128));
         authorLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        String stars = "★".repeat(book.getRating()) + "☆".repeat(5 - book.getRating());
-        JLabel starsLabel = new JLabel(stars);
+        JLabel starsLabel = new JLabel("★".repeat(book.getRating()) + "☆".repeat(5 - book.getRating()));
         starsLabel.setFont(new Font("Nunito", Font.PLAIN, 15));
         starsLabel.setForeground(new Color(186, 117, 23));
         starsLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -112,13 +84,10 @@ public class BookCard extends JPanel {
         dateLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         // Action buttons
-        JButton editBtn = UIUtils.createSmallButton("Editar", new Color(245, 245, 245), new Color(80, 80, 80),
-                new Color(200, 200, 200));
-        JButton deleteBtn = UIUtils.createSmallButton("Eliminar", new Color(251, 234, 240), new Color(114, 36, 62),
-                new Color(237, 147, 177));
+        JButton editBtn = UIUtils.createSmallButton("Editar", new Color(245, 245, 245), new Color(80, 80, 80), new Color(200, 200, 200));
+        JButton deleteBtn = UIUtils.createSmallButton("Eliminar", new Color(251, 234, 240), new Color(114, 36, 62), new Color(237, 147, 177));
 
         JPanel actionsPanel = new JPanel();
-        actionsPanel.setBackground(new Color(250, 250, 250));
         actionsPanel.setLayout(new BoxLayout(actionsPanel, BoxLayout.X_AXIS));
         actionsPanel.setOpaque(false);
         actionsPanel.add(editBtn);
@@ -126,7 +95,7 @@ public class BookCard extends JPanel {
         actionsPanel.add(deleteBtn);
         actionsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // Left panel - CENTER
+        // Left panel
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
         leftPanel.setOpaque(false);
@@ -145,11 +114,9 @@ public class BookCard extends JPanel {
         leftPanel.add(Box.createVerticalStrut(8));
         leftPanel.add(actionsPanel);
 
-        // Assemble card
         add(colorBar, BorderLayout.NORTH);
         add(leftPanel, BorderLayout.CENTER);
 
-        // Right panel con imagen - EAST (solo en maximizada)
         if (showCover) {
             JPanel rightPanel = new JPanel();
             rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
@@ -172,64 +139,11 @@ public class BookCard extends JPanel {
             rightPanel.add(Box.createVerticalGlue());
 
             add(rightPanel, BorderLayout.EAST);
-
-            new Thread(() -> {
-                // Comprobar caché primero
-                java.io.File cacheFile = new java.io.File("cache/" + book.getId() + ".jpg");
-
-                if (cacheFile.exists()) {
-                    // Cargar desde caché
-                    ImageIcon icon = new ImageIcon(cacheFile.getAbsolutePath());
-                    Image scaled = icon.getImage().getScaledInstance(75, 110, Image.SCALE_SMOOTH);
-                    SwingUtilities.invokeLater(() -> {
-                        coverLabel.setIcon(new ImageIcon(scaled));
-                        progressBar.setVisible(false);
-                        rightPanel.revalidate();
-                    });
-                } else {
-                    // Descargar y guardar en caché
-                    String coverUrl = book.getCoverURL();
-                    if (coverUrl == null || coverUrl.isEmpty()) {
-                        coverUrl = BookCoverFetcher.fetchCoverUrl(book.getTitle());
-                        if (coverUrl != null) {
-                            book.setCoverURL(coverUrl);
-                            try {
-                                bookFile.editBook(book);
-                            } catch (Exception e) {
-                                System.out.println("Error al guardar URL: " + e.getMessage());
-                            }
-                        }
-                    }
-
-                    final String urlToLoad = coverUrl;
-                    if (urlToLoad != null && !urlToLoad.isEmpty()) {
-                        try {
-                            URI uri = new URI(urlToLoad);
-                            ImageIcon icon = new ImageIcon(uri.toURL());
-                            // Guardar en caché
-                            cacheFile.getParentFile().mkdirs();
-                            javax.imageio.ImageIO.write(
-                                    javax.imageio.ImageIO.read(uri.toURL()),
-                                    "jpg", cacheFile);
-                            Image scaled = icon.getImage().getScaledInstance(75, 110, Image.SCALE_SMOOTH);
-                            SwingUtilities.invokeLater(() -> {
-                                coverLabel.setIcon(new ImageIcon(scaled));
-                                progressBar.setVisible(false);
-                                rightPanel.revalidate();
-                            });
-                        } catch (Exception e) {
-                            SwingUtilities.invokeLater(() -> progressBar.setVisible(false));
-                        }
-                    } else {
-                        SwingUtilities.invokeLater(() -> progressBar.setVisible(false));
-                    }
-                }
-            }).start();
+            loadCover(book, bookFile, coverLabel, progressBar, rightPanel);
         }
 
         deleteBtn.addActionListener(e -> {
-            int confirm = JOptionPane.showConfirmDialog(null, "¿Eliminar este libro?", "Confirmar",
-                    JOptionPane.YES_NO_OPTION);
+            int confirm = JOptionPane.showConfirmDialog(null, "¿Eliminar este libro?", "Confirmar", JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) {
                 try {
                     bookFile.deleteBook(book.getId());
@@ -241,6 +155,87 @@ public class BookCard extends JPanel {
         });
 
         editBtn.addActionListener(e -> new AddBookDialog(window, bookFile, book));
+    }
+
+    private JPanel createColorBar(String status) {
+        JPanel colorBar = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(getBackground());
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
+                g2.dispose();
+            }
+        };
+        colorBar.setPreferredSize(new Dimension(100, 6));
+        colorBar.setMinimumSize(new Dimension(0, 6));
+        colorBar.setMaximumSize(new Dimension(Integer.MAX_VALUE, 6));
+        colorBar.setBackground(switch (status) {
+            case "LEIDO" -> new Color(95, 202, 165);
+            case "LEYENDO" -> new Color(168, 154, 232);
+            case "PROXIMO" -> new Color(250, 199, 117);
+            default -> new Color(237, 147, 177);
+        });
+        return colorBar;
+    }
+
+    private Object[] getStatusInfo(String status) {
+        return switch (status) {
+            case "LEIDO" -> new Object[]{ new Color(225, 245, 238), new Color(8, 80, 65), "✓ Leído" };
+            case "LEYENDO" -> new Object[]{ new Color(238, 236, 254), new Color(80, 60, 180), "📖 Leyendo" };
+            case "PROXIMO" -> new Object[]{ new Color(250, 238, 218), new Color(99, 56, 6), "🕒 Próximamente" };
+            default -> new Object[]{ new Color(251, 234, 240), new Color(114, 36, 62), "♡ Quiero leer" };
+        };
+    }
+
+    private void loadCover(Book book, BookFile bookFile, JLabel coverLabel, JProgressBar progressBar, JPanel rightPanel) {
+        new Thread(() -> {
+            java.io.File cacheFile = new java.io.File("cache/" + book.getId() + ".jpg");
+
+            if (cacheFile.exists()) {
+                ImageIcon icon = new ImageIcon(cacheFile.getAbsolutePath());
+                Image scaled = icon.getImage().getScaledInstance(75, 110, Image.SCALE_SMOOTH);
+                SwingUtilities.invokeLater(() -> {
+                    coverLabel.setIcon(new ImageIcon(scaled));
+                    progressBar.setVisible(false);
+                    rightPanel.revalidate();
+                });
+            } else {
+                String coverUrl = book.getCoverURL();
+                if (coverUrl == null || coverUrl.isEmpty()) {
+                    coverUrl = BookCoverFetcher.fetchCoverUrl(book.getTitle());
+                    if (coverUrl != null) {
+                        book.setCoverURL(coverUrl);
+                        try {
+                            bookFile.editBook(book);
+                        } catch (Exception e) {
+                            System.out.println("Error al guardar URL: " + e.getMessage());
+                        }
+                    }
+                }
+
+                final String urlToLoad = coverUrl;
+                if (urlToLoad != null && !urlToLoad.isEmpty()) {
+                    try {
+                        URI uri = new URI(urlToLoad);
+                        cacheFile.getParentFile().mkdirs();
+                        javax.imageio.ImageIO.write(javax.imageio.ImageIO.read(uri.toURL()), "jpg", cacheFile);
+                        ImageIcon icon = new ImageIcon(uri.toURL());
+                        Image scaled = icon.getImage().getScaledInstance(75, 110, Image.SCALE_SMOOTH);
+                        SwingUtilities.invokeLater(() -> {
+                            coverLabel.setIcon(new ImageIcon(scaled));
+                            progressBar.setVisible(false);
+                            rightPanel.revalidate();
+                        });
+                    } catch (Exception e) {
+                        SwingUtilities.invokeLater(() -> progressBar.setVisible(false));
+                    }
+                } else {
+                    SwingUtilities.invokeLater(() -> progressBar.setVisible(false));
+                }
+            }
+        }).start();
     }
 
     @Override
