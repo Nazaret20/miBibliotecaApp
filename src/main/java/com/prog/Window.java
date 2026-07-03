@@ -23,6 +23,7 @@ public class Window extends JFrame {
     private JPanel filtersPanel;
     private JButton btnRead, btnPending, btnWishlist, btnAll, btnReading;
     private JComboBox<String> combo;
+    private JTextField txtSearch;
 
     // Cards
     private JPanel cardsPanel, centerContent;
@@ -82,6 +83,7 @@ public class Window extends JFrame {
         btnAll = new JButton("Todos");
         btnReading = new JButton("Leyendo");
         combo = new JComboBox<>(new String[] { "Fecha", "Título" });
+        txtSearch = new JTextField();
 
         // Cards
         cardsPanel = new JPanel(new WrapLayout(FlowLayout.CENTER, 15, 15));
@@ -93,9 +95,7 @@ public class Window extends JFrame {
     private void initComponents() {
         setTitle("Mi biblioteca");
         setSize(900, 700);
-        // a href=httpswww.flaticon.esiconos-gratisbiblioteca-en-linea title=biblioteca
-        // en línea iconosBiblioteca en línea iconos creados por Triangle Squad -
-        // Flaticona
+
         ImageIcon appIcon = new ImageIcon(getClass().getResource("/icons/bibliotecaIcon.png"));
         setIconImage(appIcon.getImage());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -173,6 +173,7 @@ public class Window extends JFrame {
         filtersPanel.setBorder(BorderFactory.createEmptyBorder(16, 12, 8, 16));
         filtersPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         UIUtils.styleComboBox(combo);
+        UIUtils.styleSearchField(txtSearch);
 
         setupFilterButton(btnRead, "#7EC87A", "#E1F5DA", "#cee9c2");
         setupFilterButton(btnPending, "#F5A623", "#FEF3DC", "#f7e5bd");
@@ -186,6 +187,7 @@ public class Window extends JFrame {
         filtersPanel.add(btnReading);
         filtersPanel.add(btnAll);
         filtersPanel.add(combo);
+        filtersPanel.add(txtSearch);
 
         // Cards
         centerContent.add(filtersPanel, BorderLayout.NORTH);
@@ -229,6 +231,8 @@ public class Window extends JFrame {
 
     /*----------------------------LISTENERS----------------------------- */
     private void setUpListeners() {
+        addBookBtn.addActionListener(e -> new AddBookDialog(this, bookFile));
+
         btnRead.addActionListener(e -> {
             setActiveFilter(btnRead);
             currentFilter = "LEIDO";
@@ -264,7 +268,18 @@ public class Window extends JFrame {
             loadBooks(currentFilter);
         });
 
-        addBookBtn.addActionListener(e -> new AddBookDialog(this, bookFile));
+        txtSearch.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                searchBooks();
+            }
+
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                searchBooks();
+            }
+
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+            }
+        });
 
         addWindowStateListener(e -> {
             if ((e.getNewState() & java.awt.Frame.MAXIMIZED_BOTH) != 0) {
@@ -282,6 +297,31 @@ public class Window extends JFrame {
                 });
             }
         });
+
+        java.awt.event.MouseAdapter focusAway = new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                principal.requestFocusInWindow();
+            }
+        };
+
+        principal.addMouseListener(focusAway);
+        main.addMouseListener(focusAway);
+        stats.addMouseListener(focusAway);
+        cardsPanel.addMouseListener(focusAway);
+    }
+
+    private void searchBooks() {
+        String query = txtSearch.getText().trim().toLowerCase();
+        cardsPanel.removeAll();
+        for (Book book : bookFile.getBookList()) {
+            if (book.getTitle().toLowerCase().contains(query) ||
+                    book.getAuthor().toLowerCase().contains(query)) {
+                cardsPanel.add(new BookCard(book, bookFile, this, cardWidth, isMaximized));
+            }
+        }
+        cardsPanel.revalidate();
+        cardsPanel.repaint();
     }
 
     private void updateCardSize(int width) {
@@ -378,7 +418,6 @@ public class Window extends JFrame {
         }
     }
 
-    /*----------------------------EXTRAS----------------------------- */
     private void updateStats() {
         int read = 0, pending = 0, wishlist = 0;
         int totalRating = 0, ratedBooks = 0;

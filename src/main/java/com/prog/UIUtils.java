@@ -4,6 +4,8 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import com.formdev.flatlaf.icons.FlatSearchIcon;
+
 public class UIUtils {
     public static JButton createSmallButton(String text, Color bg, Color fg, Color border) {
         JButton btn = new JButton(text);
@@ -17,24 +19,6 @@ public class UIUtils {
         btn.putClientProperty("FlatLaf.style",
                 "arc: 8; borderColor: " + borderHex + "; hoverBorderColor: " + borderHex);
         return btn;
-    }
-
-    public static JPanel createRoundedCard(Color backgroundColor) {
-        JPanel card = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(backgroundColor);
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
-                g2.dispose();
-                super.paintComponent(g);
-            }
-        };
-        card.setOpaque(false);
-        card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
-        card.setBorder(BorderFactory.createEmptyBorder(12, 14, 12, 14));
-        return card;
     }
 
     public static JPanel createStatPanel(JLabel txtLabel, JLabel numLabel, Color backgroundColor) {
@@ -80,7 +64,16 @@ public class UIUtils {
                     label.setForeground(new Color(80, 80, 80));
                 }
                 return label;
+
             }
         });
+    }
+
+    public static void styleSearchField(JTextField field) {
+        field.setPreferredSize(new Dimension(160, 32));
+        field.putClientProperty("FlatLaf.style", "arc: 40; focusedBorderColor: #A89AE8; iconTextGap: 4");
+        field.putClientProperty("JTextField.leadingIcon", new FlatSearchIcon());
+        field.putClientProperty("JTextField.placeholderText", "Buscar libro...");
+        field.putClientProperty("JTextField.showClearButton", true);
     }
 }
