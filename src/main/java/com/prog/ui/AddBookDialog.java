@@ -67,6 +67,7 @@ public class AddBookDialog extends JDialog {
         setSize(500, 560);
         setLocationRelativeTo(parent);
         setResizable(false);
+        getContentPane().setBackground(ThemeColors.background());
         setUpLayout();
         initComponents();
         setUpListeners();
@@ -90,6 +91,10 @@ public class AddBookDialog extends JDialog {
         txtAuthor = new JTextField();
         txtDate = new JTextField();
         txtNotes = new JTextArea();
+        txtTitle.setBackground(new Color(250, 250, 250));
+        txtAuthor.setBackground(new Color(250, 250, 250));
+        txtDate.setBackground(new Color(250, 250, 250));
+        txtNotes.setBackground(new Color(250, 250, 250));
 
         cancelBtn = new JButton("Cancelar");
         saveBtn = new JButton("Guardar libro");
@@ -113,12 +118,12 @@ public class AddBookDialog extends JDialog {
 
     /*----------------------------COMPONENTS----------------------------- */
     private void initComponents() {
-        mainPanel.setBackground(ThemeColors.cardBackground());
+        mainPanel.setBackground(ThemeColors.background());
         add(mainPanel);
 
         // HEADER
         headerPanel.setLayout(new GridLayout(2, 1, 0, 4));
-        headerPanel.setBackground(ThemeColors.cardBackground());
+        headerPanel.setBackground(ThemeColors.background());
         headerPanel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createMatteBorder(0, 0, 1, 0, ThemeColors.border()),
                 BorderFactory.createEmptyBorder(20, 24, 16, 24)));
@@ -137,7 +142,7 @@ public class AddBookDialog extends JDialog {
 
         // BODY
         bodyPanel.setLayout(new BoxLayout(bodyPanel, BoxLayout.Y_AXIS));
-        bodyPanel.setBackground(ThemeColors.cardBackground());
+        bodyPanel.setBackground(ThemeColors.background());
         bodyPanel.setBorder(BorderFactory.createEmptyBorder(8, 24, 8, 24));
         mainPanel.add(bodyPanel, BorderLayout.CENTER);
 
@@ -148,7 +153,7 @@ public class AddBookDialog extends JDialog {
         }
 
         // Título y autor
-        titleAuthorPanel.setBackground(ThemeColors.cardBackground());
+        titleAuthorPanel.setBackground(ThemeColors.background());
         titleAuthorPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         titleAuthorPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
 
@@ -158,12 +163,12 @@ public class AddBookDialog extends JDialog {
                 + ThemeColors.toHex(ThemeColors.inputFocusBorder()));
 
         JPanel titleField = new JPanel(new BorderLayout(0, 5));
-        titleField.setBackground(ThemeColors.cardBackground());
+        titleField.setBackground(ThemeColors.background());
         titleField.add(lblTitle, BorderLayout.NORTH);
         titleField.add(txtTitle, BorderLayout.CENTER);
 
         JPanel authorField = new JPanel(new BorderLayout(0, 5));
-        authorField.setBackground(ThemeColors.cardBackground());
+        authorField.setBackground(ThemeColors.background());
         authorField.add(lblAuthor, BorderLayout.NORTH);
         authorField.add(txtAuthor, BorderLayout.CENTER);
 
@@ -174,7 +179,7 @@ public class AddBookDialog extends JDialog {
 
         // Estado
         lblStatus.setAlignmentX(Component.LEFT_ALIGNMENT);
-        statusPanel.setBackground(ThemeColors.cardBackground());
+        statusPanel.setBackground(ThemeColors.background());
         statusPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         statusPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 36));
 
@@ -217,7 +222,7 @@ public class AddBookDialog extends JDialog {
 
         // Puntuación y fecha
         JButton[] starBtns = { btn1Star, btn2Star, btn3Star, btn4Star, btn5Star };
-        starsPanel.setBackground(ThemeColors.cardBackground());
+        starsPanel.setBackground(ThemeColors.background());
         for (JButton btn : starBtns) {
             btn.setFocusPainted(false);
             btn.setFocusable(false);
@@ -232,7 +237,7 @@ public class AddBookDialog extends JDialog {
         }
 
         JPanel ratingField = new JPanel(new BorderLayout(0, 5));
-        ratingField.setBackground(ThemeColors.cardBackground());
+        ratingField.setBackground(ThemeColors.background());
         ratingField.add(lblRating, BorderLayout.NORTH);
         ratingField.add(starsPanel, BorderLayout.CENTER);
 
@@ -241,11 +246,11 @@ public class AddBookDialog extends JDialog {
         txtDate.putClientProperty("JTextField.placeholderText", "Ej: 2/4/2024");
 
         JPanel dateField = new JPanel(new BorderLayout(0, 5));
-        dateField.setBackground(ThemeColors.cardBackground());
+        dateField.setBackground(ThemeColors.background());
         dateField.add(lblDate, BorderLayout.NORTH);
         dateField.add(txtDate, BorderLayout.CENTER);
 
-        ratingPanel.setBackground(ThemeColors.cardBackground());
+        ratingPanel.setBackground(ThemeColors.background());
         ratingPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         ratingPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
         ratingPanel.add(ratingField);
@@ -263,6 +268,8 @@ public class AddBookDialog extends JDialog {
         JScrollPane notesScroll = new JScrollPane(txtNotes);
         notesScroll.putClientProperty("FlatLaf.style", "arc: 8; focusedBorderColor: "
                 + ThemeColors.toHex(ThemeColors.inputFocusBorder()));
+        notesScroll.setBackground(new Color(250, 250, 250));
+        notesScroll.getViewport().setBackground(new Color(250, 250, 250));
         notesScroll.setAlignmentX(Component.LEFT_ALIGNMENT);
         notesScroll.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
 
@@ -273,7 +280,7 @@ public class AddBookDialog extends JDialog {
 
         // FOOTER
         footerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 8, 24));
-        footerPanel.setBackground(ThemeColors.cardBackground());
+        footerPanel.setBackground(ThemeColors.background());
         footerPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, ThemeColors.border()));
 
         cancelBtn.setBackground(ThemeColors.buttonBackground());
