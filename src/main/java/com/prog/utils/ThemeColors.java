@@ -236,7 +236,7 @@ public class ThemeColors {
     }
 
     public static Color themeButtonBackground() {
-        return isDark() ? new Color(136, 201, 227) : new Color(45, 80, 194);
+        return isDark() ? new Color(136, 201, 227) : new Color(23, 57, 166);
     }
 
     public static Color themeButtonForeground() {
