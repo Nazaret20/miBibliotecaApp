@@ -11,7 +11,8 @@ import com.prog.utils.ThemeColors;
 /**
  * Dialog for adding or editing a book in the personal library.
  * Includes fields for title, author, status, rating, date and notes.
- * Automatically fetches the author from Google Books API as the user types the title.
+ * Automatically fetches the author from Google Books API as the user types the
+ * title.
  */
 public class AddBookDialog extends JDialog {
 
@@ -31,9 +32,10 @@ public class AddBookDialog extends JDialog {
 
     /**
      * Opens the dialog in edit mode with the book's existing data pre-filled.
-     * @param parent Parent window
+     * 
+     * @param parent   Parent window
      * @param bookFile File handler for saving changes
-     * @param book Book to edit
+     * @param book     Book to edit
      */
     public AddBookDialog(Window parent, BookFile bookFile, Book book) {
         super(parent, "Editar libro", true);
@@ -47,7 +49,8 @@ public class AddBookDialog extends JDialog {
 
     /**
      * Opens the dialog in add mode with empty fields.
-     * @param parent Parent window
+     * 
+     * @param parent   Parent window
      * @param bookFile File handler for saving the new book
      */
     public AddBookDialog(Window parent, BookFile bookFile) {
@@ -141,7 +144,7 @@ public class AddBookDialog extends JDialog {
         JLabel[] fieldLabels = { lblTitle, lblAuthor, lblStatus, lblRating, lblDate, lblNotes };
         for (JLabel lbl : fieldLabels) {
             lbl.setFont(new Font("Nunito", Font.BOLD, 13));
-            lbl.setForeground(ThemeColors.textTertiary());
+            lbl.setForeground(ThemeColors.textPrimary());
         }
 
         // Título y autor
@@ -149,8 +152,10 @@ public class AddBookDialog extends JDialog {
         titleAuthorPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         titleAuthorPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
 
-        txtTitle.putClientProperty("FlatLaf.style", "arc: 8; focusedBorderColor: #A89AE8");
-        txtAuthor.putClientProperty("FlatLaf.style", "arc: 8; focusedBorderColor: #A89AE8");
+        txtTitle.putClientProperty("FlatLaf.style", "arc: 8; focusedBorderColor: "
+                + ThemeColors.toHex(ThemeColors.inputFocusBorder()));
+        txtAuthor.putClientProperty("FlatLaf.style", "arc: 8; focusedBorderColor: "
+                + ThemeColors.toHex(ThemeColors.inputFocusBorder()));
 
         JPanel titleField = new JPanel(new BorderLayout(0, 5));
         titleField.setBackground(ThemeColors.cardBackground());
@@ -175,10 +180,22 @@ public class AddBookDialog extends JDialog {
 
         JButton[] statusBtns = { btnRead, btnReading, btnPending, btnWishlist };
         String[] statusStyles = {
-            "borderColor: #CCCCCC; hoverBorderColor: #7EC87A; hoverBackground: #E1F5DA; pressedBackground: #cee9c2",
-            "borderColor: #CCCCCC; hoverBorderColor: #A89AE8; hoverBackground: #e8e6fd; pressedBackground: #d0cbfa",
-            "borderColor: #CCCCCC; hoverBorderColor: #F5A623; hoverBackground: #FEF3DC; pressedBackground: #f7e5bd",
-            "borderColor: #CCCCCC; hoverBorderColor: #ED93B1; hoverBackground: #FBEAF0; pressedBackground: #f7d8e8"
+                "borderColor: " + ThemeColors.toHex(ThemeColors.border()) + "; hoverBorderColor: "
+                        + ThemeColors.toHex(ThemeColors.readAccent()) + "; hoverBackground: "
+                        + ThemeColors.toHex(ThemeColors.filterReadBackground()) + "; pressedBackground: "
+                        + ThemeColors.toHex(ThemeColors.filterReadBackground()),
+                "borderColor: " + ThemeColors.toHex(ThemeColors.border()) + "; hoverBorderColor: "
+                        + ThemeColors.toHex(ThemeColors.readingAccent()) + "; hoverBackground: "
+                        + ThemeColors.toHex(ThemeColors.filterReadingBackground()) + "; pressedBackground: "
+                        + ThemeColors.toHex(ThemeColors.filterReadingBackground()),
+                "borderColor: " + ThemeColors.toHex(ThemeColors.border()) + "; hoverBorderColor: "
+                        + ThemeColors.toHex(ThemeColors.upcomingAccent()) + "; hoverBackground: "
+                        + ThemeColors.toHex(ThemeColors.filterPendingBackground()) + "; pressedBackground: "
+                        + ThemeColors.toHex(ThemeColors.filterPendingBackground()),
+                "borderColor: " + ThemeColors.toHex(ThemeColors.border()) + "; hoverBorderColor: "
+                        + ThemeColors.toHex(ThemeColors.wishlistAccent()) + "; hoverBackground: "
+                        + ThemeColors.toHex(ThemeColors.filterWishlistBackground()) + "; pressedBackground: "
+                        + ThemeColors.toHex(ThemeColors.filterWishlistBackground())
         };
         for (int i = 0; i < statusBtns.length; i++) {
             JButton btn = statusBtns[i];
@@ -206,7 +223,9 @@ public class AddBookDialog extends JDialog {
             btn.setFocusable(false);
             btn.setBackground(ThemeColors.cardBackground());
             btn.setForeground(ThemeColors.textSecondary());
-            btn.putClientProperty("FlatLaf.style", "arc: 6; borderColor: #DDDDDD; hoverBorderColor: #DDDDDD");
+            btn.putClientProperty("FlatLaf.style", "arc: 6; borderColor: "
+                    + ThemeColors.toHex(ThemeColors.inputBorder()) + "; hoverBorderColor: "
+                    + ThemeColors.toHex(ThemeColors.inputBorder()));
             btn.setMargin(new Insets(4, 8, 4, 8));
             btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
             starsPanel.add(btn);
@@ -217,7 +236,8 @@ public class AddBookDialog extends JDialog {
         ratingField.add(lblRating, BorderLayout.NORTH);
         ratingField.add(starsPanel, BorderLayout.CENTER);
 
-        txtDate.putClientProperty("FlatLaf.style", "arc: 8; focusedBorderColor: #A89AE8");
+        txtDate.putClientProperty("FlatLaf.style", "arc: 8; focusedBorderColor: "
+                + ThemeColors.toHex(ThemeColors.inputFocusBorder()));
         txtDate.putClientProperty("JTextField.placeholderText", "Ej: 2/4/2024");
 
         JPanel dateField = new JPanel(new BorderLayout(0, 5));
@@ -241,7 +261,8 @@ public class AddBookDialog extends JDialog {
         txtNotes.setBorder(BorderFactory.createEmptyBorder(6, 8, 6, 8));
 
         JScrollPane notesScroll = new JScrollPane(txtNotes);
-        notesScroll.putClientProperty("FlatLaf.style", "arc: 8; focusedBorderColor: #A89AE8");
+        notesScroll.putClientProperty("FlatLaf.style", "arc: 8; focusedBorderColor: "
+                + ThemeColors.toHex(ThemeColors.inputFocusBorder()));
         notesScroll.setAlignmentX(Component.LEFT_ALIGNMENT);
         notesScroll.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
 
@@ -263,12 +284,13 @@ public class AddBookDialog extends JDialog {
         cancelBtn.putClientProperty("FlatLaf.style",
                 "arc: 8; borderColor: #CCCCCC; hoverBorderColor: #CCCCCC; focusedBorderColor: #CCCCCC");
 
-        saveBtn.setBackground(new Color(230, 241, 251));
-        saveBtn.setForeground(new Color(12, 68, 124));
+        saveBtn.setBackground(ThemeColors.actionButtonBackground());
+        saveBtn.setForeground(ThemeColors.actionButtonForeground());
         saveBtn.setMargin(new Insets(8, 16, 8, 16));
         saveBtn.setFocusPainted(false);
         saveBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        saveBtn.putClientProperty("FlatLaf.style", "arc: 8; borderColor: #85B7EB");
+        saveBtn.putClientProperty("FlatLaf.style", "arc: 8; borderColor: "
+                + ThemeColors.toHex(ThemeColors.actionButtonBorder()));
 
         footerPanel.add(cancelBtn);
         footerPanel.add(saveBtn);
@@ -299,8 +321,13 @@ public class AddBookDialog extends JDialog {
                 txtAuthor.putClientProperty("JTextField.placeholderText", "Buscando autor...");
                 debounceTimer.restart();
             }
-            public void removeUpdate(javax.swing.event.DocumentEvent e) { debounceTimer.restart(); }
-            public void changedUpdate(javax.swing.event.DocumentEvent e) {}
+
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                debounceTimer.restart();
+            }
+
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+            }
         });
 
         btnRead.addActionListener(e -> setActiveStatus(btnRead));
@@ -357,7 +384,8 @@ public class AddBookDialog extends JDialog {
     }
 
     private String normalizeDate(String date) {
-        if (date.isEmpty()) return "";
+        if (date.isEmpty())
+            return "";
         String[] parts = date.split("/");
         String day = parts[0].length() == 1 ? "0" + parts[0] : parts[0];
         String month = parts[1].length() == 1 ? "0" + parts[1] : parts[1];
@@ -365,10 +393,14 @@ public class AddBookDialog extends JDialog {
     }
 
     private String getSelectedStatus() {
-        if (btnRead.getBackground().equals(new Color(225, 245, 218))) return "LEIDO";
-        if (btnReading.getBackground().equals(new Color(238, 236, 254))) return "LEYENDO";
-        if (btnPending.getBackground().equals(new Color(254, 243, 220))) return "PROXIMO";
-        if (btnWishlist.getBackground().equals(new Color(251, 234, 240))) return "QUIERO_LEER";
+        if (btnRead.getBackground().equals(ThemeColors.filterReadBackground()))
+            return "LEIDO";
+        if (btnReading.getBackground().equals(ThemeColors.filterReadingBackground()))
+            return "LEYENDO";
+        if (btnPending.getBackground().equals(ThemeColors.filterPendingBackground()))
+            return "PROXIMO";
+        if (btnWishlist.getBackground().equals(ThemeColors.filterWishlistBackground()))
+            return "QUIERO_LEER";
         return null;
     }
 
@@ -378,8 +410,10 @@ public class AddBookDialog extends JDialog {
         for (int i = 0; i < stars.length; i++) {
             if (i < rating) {
                 stars[i].setText("★");
-                stars[i].setForeground(new Color(186, 117, 23));
-                stars[i].putClientProperty("FlatLaf.style", "arc: 6; borderColor: #EF9F27; hoverBorderColor: #EF9F27");
+                stars[i].setForeground(ThemeColors.ratingActive());
+                stars[i].putClientProperty("FlatLaf.style", "arc: 6; borderColor: "
+                        + ThemeColors.toHex(ThemeColors.starBorder()) + "; hoverBorderColor: "
+                        + ThemeColors.toHex(ThemeColors.starBorder()));
             } else {
                 stars[i].setText("☆");
                 stars[i].setForeground(ThemeColors.textSecondary());
@@ -391,27 +425,34 @@ public class AddBookDialog extends JDialog {
     private void setActiveStatus(JButton activeBtn) {
         JButton[] statusBtns = { btnRead, btnReading, btnPending, btnWishlist };
         Color[] bgColors = {
-                new Color(225, 245, 218), new Color(238, 236, 254),
-                new Color(254, 243, 220), new Color(251, 234, 240)
+                ThemeColors.filterReadBackground(), ThemeColors.filterReadingBackground(),
+                ThemeColors.filterPendingBackground(), ThemeColors.filterWishlistBackground()
         };
-        String[] borderColors = { "#7EC87A", "#A89AE8", "#F5A623", "#ED93B1" };
-        String[] hoverColors =  { "#7EC87A", "#A89AE8", "#F5A623", "#ED93B1" };
-        String[] hoverBgColors = { "#E0F5D3", "#e8e6fd", "#FEF3DC", "#FBEAF0" };
-        String[] pressedColors = { "#cee9c2", "#d0cbfa", "#f7e5bd", "#f7d8e8" };
+        Color[] borderColors = { ThemeColors.readAccent(), ThemeColors.readingAccent(), ThemeColors.upcomingAccent(),
+                ThemeColors.wishlistAccent() };
+        Color[] hoverColors = { ThemeColors.readAccent(), ThemeColors.readingAccent(), ThemeColors.upcomingAccent(),
+                ThemeColors.wishlistAccent() };
+        Color[] hoverBgColors = { ThemeColors.filterReadBackground(), ThemeColors.filterReadingBackground(),
+                ThemeColors.filterPendingBackground(), ThemeColors.filterWishlistBackground() };
+        Color[] pressedColors = { ThemeColors.filterReadBackground(), ThemeColors.filterReadingBackground(),
+                ThemeColors.filterPendingBackground(), ThemeColors.filterWishlistBackground() };
 
         for (int i = 0; i < statusBtns.length; i++) {
             if (statusBtns[i] == activeBtn) {
                 statusBtns[i].setBackground(bgColors[i]);
                 statusBtns[i].setForeground(ThemeColors.textPrimary());
                 statusBtns[i].putClientProperty("FlatLaf.style",
-                        "borderColor: " + borderColors[i] + "; hoverBorderColor: " + borderColors[i]
-                                + "; pressedBackground: " + pressedColors[i]);
+                        "borderColor: " + ThemeColors.toHex(borderColors[i]) + "; hoverBorderColor: "
+                                + ThemeColors.toHex(borderColors[i]) + "; pressedBackground: "
+                                + ThemeColors.toHex(pressedColors[i]));
             } else {
                 statusBtns[i].setBackground(ThemeColors.buttonBackground());
                 statusBtns[i].setForeground(ThemeColors.textTertiary());
                 statusBtns[i].putClientProperty("FlatLaf.style",
-                        "borderColor: #CCCCCC; hoverBorderColor: " + hoverColors[i] + "; hoverBackground: "
-                                + hoverBgColors[i] + "; pressedBackground: " + pressedColors[i]);
+                        "borderColor: " + ThemeColors.toHex(ThemeColors.border()) + "; hoverBorderColor: "
+                                + ThemeColors.toHex(hoverColors[i]) + "; hoverBackground: "
+                                + ThemeColors.toHex(hoverBgColors[i]) + "; pressedBackground: "
+                                + ThemeColors.toHex(pressedColors[i]));
             }
             statusBtns[i].repaint();
         }

@@ -12,18 +12,21 @@ import com.prog.utils.UIUtils;
 
 /**
  * Visual card component representing a single book in the library grid.
- * Displays title, author, rating, notes, date, status and optionally the book cover.
+ * Displays title, author, rating, notes, date, status and optionally the book
+ * cover.
  * Cover images are fetched from Google Books API and cached locally.
  */
 public class BookCard extends JPanel {
 
     /**
      * Creates a new book card with all its visual components.
-     * @param book Book data to display
-     * @param bookFile File handler used for delete and edit operations
-     * @param window Parent window, used to refresh the grid after changes
+     * 
+     * @param book      Book data to display
+     * @param bookFile  File handler used for delete and edit operations
+     * @param window    Parent window, used to refresh the grid after changes
      * @param cardWidth Width of the card in pixels
-     * @param showCover Whether to fetch and display the book cover (only in maximized window)
+     * @param showCover Whether to fetch and display the book cover (only in
+     *                  maximized window)
      */
     public BookCard(Book book, BookFile bookFile, Window window, int cardWidth, boolean showCover) {
         setOpaque(false);
@@ -75,7 +78,7 @@ public class BookCard extends JPanel {
 
         JLabel starsLabel = new JLabel("★".repeat(book.getRating()) + "☆".repeat(5 - book.getRating()));
         starsLabel.setFont(new Font("Nunito", Font.PLAIN, 15));
-        starsLabel.setForeground(new Color(186, 117, 23));
+        starsLabel.setForeground(ThemeColors.ratingActive());
         starsLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JLabel notesLabel = new JLabel(
@@ -90,13 +93,15 @@ public class BookCard extends JPanel {
         notesWrapper.add(notesLabel);
         notesWrapper.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JLabel dateLabel = new JLabel("○ " + (book.getDate().isEmpty() ? "Sin fecha" : book.getDate()));
+        JLabel dateLabel = new JLabel("📆 " + (book.getDate().isEmpty() ? "Sin fecha" : book.getDate()));
         dateLabel.setFont(new Font("Nunito", Font.PLAIN, 13));
         dateLabel.setForeground(ThemeColors.textSecondary());
         dateLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JButton editBtn = UIUtils.createSmallButton("Editar", ThemeColors.background(), ThemeColors.textTertiary(), ThemeColors.cardBorder());
-        JButton deleteBtn = UIUtils.createSmallButton("Eliminar", new Color(251, 234, 240), new Color(114, 36, 62), new Color(237, 147, 177));
+        JButton editBtn = UIUtils.createSmallButton("Editar", ThemeColors.buttonBackground(),
+                ThemeColors.textTertiary(), ThemeColors.cardBorder());
+        JButton deleteBtn = UIUtils.createSmallButton("Eliminar", ThemeColors.deleteButtonBackground(),
+                ThemeColors.deleteButtonForeground(), ThemeColors.deleteButtonBorder());
 
         JPanel actionsPanel = new JPanel();
         actionsPanel.setLayout(new BoxLayout(actionsPanel, BoxLayout.X_AXIS));
@@ -153,7 +158,8 @@ public class BookCard extends JPanel {
         }
 
         deleteBtn.addActionListener(e -> {
-            int confirm = JOptionPane.showConfirmDialog(null, "¿Eliminar este libro?", "Confirmar", JOptionPane.YES_NO_OPTION);
+            int confirm = JOptionPane.showConfirmDialog(null, "¿Eliminar este libro?", "Confirmar",
+                    JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) {
                 try {
                     bookFile.deleteBook(book.getId());
@@ -182,24 +188,29 @@ public class BookCard extends JPanel {
         colorBar.setMinimumSize(new Dimension(0, 6));
         colorBar.setMaximumSize(new Dimension(Integer.MAX_VALUE, 6));
         colorBar.setBackground(switch (status) {
-            case "LEIDO" -> new Color(95, 202, 165);
-            case "LEYENDO" -> new Color(168, 154, 232);
-            case "PROXIMO" -> new Color(250, 199, 117);
-            default -> new Color(237, 147, 177);
+            case "LEIDO" -> ThemeColors.readAccent();
+            case "LEYENDO" -> ThemeColors.readingAccent();
+            case "PROXIMO" -> ThemeColors.upcomingAccent();
+            default -> ThemeColors.wishlistAccent();
         });
         return colorBar;
     }
 
     private Object[] getStatusInfo(String status) {
         return switch (status) {
-            case "LEIDO" -> new Object[]{ new Color(225, 245, 238), new Color(8, 80, 65), "✓ Leído" };
-            case "LEYENDO" -> new Object[]{ new Color(238, 236, 254), new Color(80, 60, 180), "📖 Leyendo" };
-            case "PROXIMO" -> new Object[]{ new Color(250, 238, 218), new Color(99, 56, 6), "🕒 Próximamente" };
-            default -> new Object[]{ new Color(251, 234, 240), new Color(114, 36, 62), "♡ Quiero leer" };
+            case "LEIDO" ->
+                new Object[] { ThemeColors.readPillBackground(), ThemeColors.readPillForeground(), "✓ Leído" };
+            case "LEYENDO" ->
+                new Object[] { ThemeColors.readingPillBackground(), ThemeColors.readingPillForeground(), "📖 Leyendo" };
+            case "PROXIMO" -> new Object[] { ThemeColors.upcomingPillBackground(), ThemeColors.upcomingPillForeground(),
+                    "🕒 Próximamente" };
+            default -> new Object[] { ThemeColors.wishlistPillBackground(), ThemeColors.wishlistPillForeground(),
+                    "♡ Quiero leer" };
         };
     }
 
-    private void loadCover(Book book, BookFile bookFile, JLabel coverLabel, JProgressBar progressBar, JPanel rightPanel) {
+    private void loadCover(Book book, BookFile bookFile, JLabel coverLabel, JProgressBar progressBar,
+            JPanel rightPanel) {
         new Thread(() -> {
             java.io.File cacheFile = new java.io.File("cache/" + book.getId() + ".jpg");
 

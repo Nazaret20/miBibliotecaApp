@@ -61,6 +61,8 @@ public class Window extends JFrame {
         initComponents();
         setUpListeners();
         themeBtn.setText(darkMode ? "☀" : "🌙");
+        themeBtn.setForeground(ThemeColors.themeButtonForeground());
+        themeBtn.setBackground(ThemeColors.themeButtonBackground());
     }
 
     /*----------------------------LAYOUT----------------------------- */
@@ -135,19 +137,23 @@ public class Window extends JFrame {
         headerEast.setBackground(ThemeColors.background());
         headerEast.setLayout(new BoxLayout(headerEast, BoxLayout.Y_AXIS));
 
+        themeBtn.setFont(themeBtn.getFont().deriveFont(18f));
+        themeBtn.putClientProperty("JButton.buttonType", "borderless");
+        themeBtn.setMargin(new Insets(6, 6, 6, 6));
         themeBtn.setBackground(ThemeColors.buttonBackground());
         themeBtn.setForeground(ThemeColors.textTertiary());
         themeBtn.setFocusPainted(false);
         themeBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        themeBtn.putClientProperty("FlatLaf.style", "arc: 8; borderColor: #CCCCCC");
-        themeBtn.setMargin(new Insets(8, 12, 8, 12));
+        themeBtn.putClientProperty("FlatLaf.style", "arc: 10; borderColor: " + ThemeColors.toHex(ThemeColors.border()));
 
-        addBookBtn.setBackground(new Color(230, 241, 251));
-        addBookBtn.setForeground(new Color(12, 68, 124));
-        addBookBtn.setMargin(new Insets(8, 16, 8, 16));
+        addBookBtn.setBackground(ThemeColors.actionButtonBackground());
+        addBookBtn.setForeground(ThemeColors.actionButtonForeground());
+        addBookBtn.setMargin(new Insets(9, 16, 9, 16));
         addBookBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         addBookBtn.putClientProperty("FlatLaf.style",
-                "arc: 8; borderColor: #85B7EB; hoverBorderColor: #85B7EB; pressedBackground: #B8D4F0");
+                "arc: 8; borderColor: " + ThemeColors.toHex(ThemeColors.actionButtonBorder())
+                        + "; hoverBorderColor: " + ThemeColors.toHex(ThemeColors.actionButtonBorder())
+                        + "; pressedBackground: " + ThemeColors.toHex(ThemeColors.buttonBackground()));
 
         btnsPanel.setOpaque(false);
         btnsPanel.add(addBookBtn);
@@ -166,26 +172,26 @@ public class Window extends JFrame {
         stats.setBackground(ThemeColors.background());
         stats.setPreferredSize(new Dimension(0, 95));
 
-        read = UIUtils.createStatPanel(txtRead, numRead, new Color(224, 245, 211));
-        pending = UIUtils.createStatPanel(txtPending, numPending, new Color(250, 237, 212));
-        wishlist = UIUtils.createStatPanel(txtWishlist, numWishlist, new Color(255, 224, 240));
-        avgRating = UIUtils.createStatPanel(txtAvg, numAvg, new Color(223, 220, 252));
+        read = UIUtils.createStatPanel(txtRead, numRead, ThemeColors.statReadBackground());
+        pending = UIUtils.createStatPanel(txtPending, numPending, ThemeColors.statPendingBackground());
+        wishlist = UIUtils.createStatPanel(txtWishlist, numWishlist, ThemeColors.statWishlistBackground());
+        avgRating = UIUtils.createStatPanel(txtAvg, numAvg, ThemeColors.statAvgBackground());
 
         numRead.setFont(new Font("Nunito", Font.BOLD, 22));
-        numRead.setForeground(new Color(8, 80, 65));
-        txtRead.setForeground(new Color(15, 110, 86));
+        numRead.setForeground(ThemeColors.statReadValue());
+        txtRead.setForeground(ThemeColors.statReadLabel());
 
         numPending.setFont(new Font("Nunito", Font.BOLD, 22));
-        numPending.setForeground(new Color(99, 56, 6));
-        txtPending.setForeground(new Color(133, 79, 11));
+        numPending.setForeground(ThemeColors.statPendingValue());
+        txtPending.setForeground(ThemeColors.statPendingLabel());
 
         numWishlist.setFont(new Font("Nunito", Font.BOLD, 22));
-        numWishlist.setForeground(new Color(114, 36, 62));
-        txtWishlist.setForeground(new Color(153, 53, 86));
+        numWishlist.setForeground(ThemeColors.statWishlistValue());
+        txtWishlist.setForeground(ThemeColors.statWishlistLabel());
 
         numAvg.setFont(new Font("Nunito", Font.BOLD, 22));
-        numAvg.setForeground(new Color(60, 52, 137));
-        txtAvg.setForeground(new Color(83, 74, 183));
+        numAvg.setForeground(ThemeColors.statAvgValue());
+        txtAvg.setForeground(ThemeColors.statAvgLabel());
 
         stats.add(read);
         stats.add(pending);
@@ -200,11 +206,16 @@ public class Window extends JFrame {
         filterScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
         filterScroll.setBorder(null);
 
-        setupFilterButton(btnRead, "#7EC87A", "#E1F5DA", "#cee9c2");
-        setupFilterButton(btnPending, "#F5A623", "#FEF3DC", "#f7e5bd");
-        setupFilterButton(btnWishlist, "#ED93B1", "#FBEAF0", "#f7d8e8");
-        setupFilterButton(btnReading, "#A89AE8", "#e8e6fd", "#d8d3ff");
-        setupFilterButton(btnAll, "#85B7EB", "#E6F1FB", "#c8dff3");
+        setupFilterButton(btnRead, ThemeColors.readAccent(), ThemeColors.filterReadBackground(),
+                ThemeColors.filterReadBackground());
+        setupFilterButton(btnPending, ThemeColors.upcomingAccent(), ThemeColors.filterPendingBackground(),
+                ThemeColors.filterPendingBackground());
+        setupFilterButton(btnWishlist, ThemeColors.wishlistAccent(), ThemeColors.filterWishlistBackground(),
+                ThemeColors.filterWishlistBackground());
+        setupFilterButton(btnReading, ThemeColors.readingAccent(), ThemeColors.filterReadingBackground(),
+                ThemeColors.filterReadingBackground());
+        setupFilterButton(btnAll, ThemeColors.actionButtonBorder(), ThemeColors.filterAllBackground(),
+                ThemeColors.filterAllBackground());
 
         filtersPanel.add(btnRead);
         filtersPanel.add(btnPending);
@@ -244,7 +255,7 @@ public class Window extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    private void setupFilterButton(JButton btn, String hoverBorder, String hoverBg, String pressed) {
+    private void setupFilterButton(JButton btn, Color hoverBorder, Color hoverBg, Color pressed) {
         btn.setFocusPainted(false);
         btn.setFocusable(false);
         btn.setMargin(new Insets(6, 16, 6, 16));
@@ -253,8 +264,9 @@ public class Window extends JFrame {
         btn.setForeground(ThemeColors.textTertiary());
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btn.putClientProperty("FlatLaf.style",
-                "borderColor: #CCCCCC; hoverBorderColor: " + hoverBorder +
-                        "; hoverBackground: " + hoverBg + "; pressedBackground: " + pressed);
+                "borderColor: " + ThemeColors.toHex(ThemeColors.border()) + "; hoverBorderColor: "
+                        + ThemeColors.toHex(hoverBorder) + "; hoverBackground: " + ThemeColors.toHex(hoverBg)
+                        + "; pressedBackground: " + ThemeColors.toHex(pressed));
     }
 
     /*----------------------------LISTENERS----------------------------- */
@@ -426,30 +438,39 @@ public class Window extends JFrame {
     private void setActiveFilter(JButton activeBtn) {
         JButton[] filterBtns = { btnRead, btnPending, btnWishlist, btnReading, btnAll };
         Color[] bgColors = {
-                new Color(225, 245, 218),
-                new Color(254, 243, 220),
-                new Color(251, 234, 240),
-                new Color(232, 230, 253),
-                new Color(230, 241, 251)
+                ThemeColors.filterReadBackground(),
+                ThemeColors.filterPendingBackground(),
+                ThemeColors.filterWishlistBackground(),
+                ThemeColors.filterReadingBackground(),
+                ThemeColors.filterAllBackground()
         };
-        String[] borderColors = { "#7EC87A", "#F5A623", "#ED93B1", "#A89AE8", "#85B7EB" };
-        String[] hoverColors = { "#7EC87A", "#F5A623", "#ED93B1", "#A89AE8", "#85B7EB" };
-        String[] hoverBgColors = { "#E0F5D3", "#FEF3DC", "#FBEAF0", "#e8e6fd", "#E6F1FB" };
-        String[] pressedColors = { "#cee9c2", "#f7e5bd", "#f7d8e8", "#d8d3ff", "#c8dff3" };
+        Color[] borderColors = { ThemeColors.readAccent(), ThemeColors.upcomingAccent(), ThemeColors.wishlistAccent(),
+                ThemeColors.readingAccent(), ThemeColors.actionButtonBorder() };
+        Color[] hoverColors = { ThemeColors.readAccent(), ThemeColors.upcomingAccent(), ThemeColors.wishlistAccent(),
+                ThemeColors.readingAccent(), ThemeColors.actionButtonBorder() };
+        Color[] hoverBgColors = { ThemeColors.filterReadBackground(), ThemeColors.filterPendingBackground(),
+                ThemeColors.filterWishlistBackground(), ThemeColors.filterReadingBackground(),
+                ThemeColors.filterAllBackground() };
+        Color[] pressedColors = { ThemeColors.filterReadBackground(), ThemeColors.filterPendingBackground(),
+                ThemeColors.filterWishlistBackground(), ThemeColors.filterReadingBackground(),
+                ThemeColors.filterAllBackground() };
 
         for (int i = 0; i < filterBtns.length; i++) {
             if (filterBtns[i] == activeBtn) {
                 filterBtns[i].setBackground(bgColors[i]);
                 filterBtns[i].setForeground(ThemeColors.textPrimary());
                 filterBtns[i].putClientProperty("FlatLaf.style",
-                        "borderColor: " + borderColors[i] + "; hoverBorderColor: " + borderColors[i]
-                                + "; pressedBackground: " + pressedColors[i]);
+                        "borderColor: " + ThemeColors.toHex(borderColors[i]) + "; hoverBorderColor: "
+                                + ThemeColors.toHex(borderColors[i]) + "; pressedBackground: "
+                                + ThemeColors.toHex(pressedColors[i]));
             } else {
                 filterBtns[i].setBackground(ThemeColors.buttonBackground());
                 filterBtns[i].setForeground(ThemeColors.textTertiary());
                 filterBtns[i].putClientProperty("FlatLaf.style",
-                        "borderColor: #CCCCCC; hoverBorderColor: " + hoverColors[i] + "; hoverBackground: "
-                                + hoverBgColors[i] + "; pressedBackground: " + pressedColors[i]);
+                        "borderColor: " + ThemeColors.toHex(ThemeColors.border()) + "; hoverBorderColor: "
+                                + ThemeColors.toHex(hoverColors[i]) + "; hoverBackground: "
+                                + ThemeColors.toHex(hoverBgColors[i]) + "; pressedBackground: "
+                                + ThemeColors.toHex(pressedColors[i]));
             }
             filterBtns[i].repaint();
         }

@@ -49,10 +49,12 @@ public class UIUtils {
     }
 
     public static void styleComboBox(JComboBox<?> combo) {
-        combo.setBackground(new Color(240, 240, 240));
-        combo.setForeground(new Color(80, 80, 80));
+        combo.setBackground(ThemeColors.comboBackground());
+        combo.setForeground(ThemeColors.comboForeground());
         combo.setFocusable(false);
-        combo.putClientProperty("FlatLaf.style", "arc: 40; borderColor: #CCCCCC; buttonArrowColor: #797979");
+        combo.putClientProperty("FlatLaf.style",
+                "arc: 40; borderColor: " + ThemeColors.toHex(ThemeColors.border())
+                        + "; buttonArrowColor: " + ThemeColors.toHex(ThemeColors.textSecondary()));
         combo.setPreferredSize(new Dimension(90, 32));
         combo.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
@@ -64,11 +66,11 @@ public class UIUtils {
                         cellHasFocus);
                 label.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
                 if (isSelected) {
-                    label.setBackground(new Color(220, 220, 220));
-                    label.setForeground(new Color(44, 44, 42));
+                    label.setBackground(ThemeColors.comboSelectionBackground());
+                    label.setForeground(ThemeColors.comboSelectionForeground());
                 } else {
-                    label.setBackground(new Color(245, 245, 245));
-                    label.setForeground(new Color(80, 80, 80));
+                    label.setBackground(ThemeColors.comboOptionBackground());
+                    label.setForeground(ThemeColors.comboOptionForeground());
                 }
                 return label;
 
@@ -78,7 +80,8 @@ public class UIUtils {
 
     public static void styleSearchField(JTextField field) {
         field.setPreferredSize(new Dimension(160, 32));
-        field.putClientProperty("FlatLaf.style", "arc: 40; focusedBorderColor: #A89AE8; iconTextGap: 4");
+        field.putClientProperty("FlatLaf.style", "arc: 40; focusedBorderColor: "
+                + ThemeColors.toHex(ThemeColors.inputFocusBorder()) + "; iconTextGap: 4");
         field.putClientProperty("JTextField.leadingIcon", new FlatSearchIcon());
         field.putClientProperty("JTextField.placeholderText", "Buscar libro...");
         field.putClientProperty("JTextField.showClearButton", true);
