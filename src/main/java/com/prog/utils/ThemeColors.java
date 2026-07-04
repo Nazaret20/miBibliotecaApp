@@ -126,7 +126,7 @@ public class ThemeColors {
     }
 
     public static Color readPillBackground() {
-        return isDark() ? new Color(24, 53, 44) : new Color(225, 245, 238);
+        return isDark() ? new Color(24, 53, 44) : new Color(231, 247, 221);
     }
 
     public static Color readPillForeground() {
