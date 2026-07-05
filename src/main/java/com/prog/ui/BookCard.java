@@ -236,7 +236,7 @@ public class BookCard extends JPanel {
                     }
                 }
 
-                final String urlToLoad = coverUrl;
+                final String urlToLoad = coverUrl == null ? null : coverUrl.replace("http://", "https://");
                 if (urlToLoad != null && !urlToLoad.isEmpty()) {
                     try {
                         URI uri = new URI(urlToLoad);
@@ -250,6 +250,7 @@ public class BookCard extends JPanel {
                             rightPanel.revalidate();
                         });
                     } catch (Exception e) {
+                        System.out.println("Error al cargar portada (" + book.getTitle() + "): " + e.getMessage());
                         SwingUtilities.invokeLater(() -> progressBar.setVisible(false));
                     }
                 } else {

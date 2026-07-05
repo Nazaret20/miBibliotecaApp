@@ -36,7 +36,7 @@ public class BookFile {
         }
     }
 
-    public void editBook(Book editedBook) throws Exception {
+    public synchronized void editBook(Book editedBook) throws Exception {
         for (int i = 0; i < bookList.size(); i++) {
             if (bookList.get(i).getId() == editedBook.getId()) {
                 bookList.set(i, editedBook);

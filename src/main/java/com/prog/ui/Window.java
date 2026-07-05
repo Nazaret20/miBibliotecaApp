@@ -361,7 +361,7 @@ public class Window extends JFrame {
         for (Book book : bookFile.getBookList()) {
             if (book.getTitle().toLowerCase().contains(query) ||
                     book.getAuthor().toLowerCase().contains(query)) {
-                cardsPanel.add(new BookCard(book, bookFile, this, cardWidth, isMaximized));
+                cardsPanel.add(new BookCard(book, bookFile, this, cardWidth, true));
             }
         }
         cardsPanel.revalidate();
@@ -387,7 +387,7 @@ public class Window extends JFrame {
 
         for (Book book : bookFile.getBookList()) {
             if (filter.equals("ALL") || book.getStatus().equals(filter)) {
-                cardsPanel.add(new BookCard(book, bookFile, this, cardWidth, isMaximized));
+                cardsPanel.add(new BookCard(book, bookFile, this, cardWidth, true));
             }
         }
 

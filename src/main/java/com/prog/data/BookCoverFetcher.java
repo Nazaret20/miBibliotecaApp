@@ -23,7 +23,7 @@ public class BookCoverFetcher {
             if (volumeInfo != null) {
                 JsonObject imageLinks = volumeInfo.getAsJsonObject("imageLinks");
                 if (imageLinks != null) {
-                    return imageLinks.get("thumbnail").getAsString();
+                    return imageLinks.get("thumbnail").getAsString().replace("http://", "https://");
                 }
             }
         } catch (Exception e) {
