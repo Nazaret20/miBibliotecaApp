@@ -91,10 +91,14 @@ public class AddBookDialog extends JDialog {
         txtAuthor = new JTextField();
         txtDate = new JTextField();
         txtNotes = new JTextArea();
-        txtTitle.setBackground(new Color(250, 250, 250));
-        txtAuthor.setBackground(new Color(250, 250, 250));
-        txtDate.setBackground(new Color(250, 250, 250));
-        txtNotes.setBackground(new Color(250, 250, 250));
+        txtTitle.setBackground(ThemeColors.cardBackground());
+        txtTitle.setForeground(ThemeColors.textPrimary());
+        txtAuthor.setBackground(ThemeColors.cardBackground());
+        txtAuthor.setForeground(ThemeColors.textPrimary());
+        txtDate.setBackground(ThemeColors.cardBackground());
+        txtDate.setForeground(ThemeColors.textPrimary());
+        txtNotes.setBackground(ThemeColors.cardBackground());
+        txtNotes.setForeground(ThemeColors.textPrimary());
 
         cancelBtn = new JButton("Cancelar");
         saveBtn = new JButton("Guardar libro");
@@ -268,8 +272,8 @@ public class AddBookDialog extends JDialog {
         JScrollPane notesScroll = new JScrollPane(txtNotes);
         notesScroll.putClientProperty("FlatLaf.style", "arc: 8; focusedBorderColor: "
                 + ThemeColors.toHex(ThemeColors.inputFocusBorder()));
-        notesScroll.setBackground(new Color(250, 250, 250));
-        notesScroll.getViewport().setBackground(new Color(250, 250, 250));
+        notesScroll.setBackground(ThemeColors.cardBackground());
+        notesScroll.getViewport().setBackground(ThemeColors.cardBackground());
         notesScroll.setAlignmentX(Component.LEFT_ALIGNMENT);
         notesScroll.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
 
@@ -289,7 +293,9 @@ public class AddBookDialog extends JDialog {
         cancelBtn.setFocusPainted(false);
         cancelBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         cancelBtn.putClientProperty("FlatLaf.style",
-                "arc: 8; borderColor: #CCCCCC; hoverBorderColor: #CCCCCC; focusedBorderColor: #CCCCCC");
+                "arc: 8; borderColor: " + ThemeColors.toHex(ThemeColors.border()) + "; hoverBorderColor: "
+                        + ThemeColors.toHex(ThemeColors.border()) + "; focusedBorderColor: "
+                        + ThemeColors.toHex(ThemeColors.border()));
 
         saveBtn.setBackground(ThemeColors.actionButtonBackground());
         saveBtn.setForeground(ThemeColors.actionButtonForeground());

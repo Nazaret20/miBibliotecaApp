@@ -1,6 +1,12 @@
 # 📚 Mi Biblioteca Personal
 
-Una aplicación de escritorio en Java para gestionar tus lecturas personales. Añade, edita y organiza tus libros con un diseño moderno y colorido.
+## 🎓 Origen del proyecto
+
+Esta app nació como un ejercicio de preparación para el examen final de Java de 1º, donde practiqué la persistencia de datos en ficheros de texto con Swing por un lado, y por otro persistencia con BBDD. El ejercicio original era una biblioteca básica con operaciones CRUD sobre un `.txt` y una interfaz por defecto de Swing, con campos simples como título, autor, género y estado (leído/pendiente).
+
+Después del examen, lo retomé como proyecto personal para explorar cómo construir una interfaz moderna en Java partiendo de ese ejercicio base: integración con la API de Google Books para portadas y autocompletado de autor, modo oscuro, caché local de imágenes, búsqueda y filtros, y un diseño con FlatLaf y Nunito. No tenía nada que ver con el Swing por defecto que vi en clase, y ahora ¡así esto sí que mola!
+
+En definitiva, es una aplicación de escritorio en Java para gestionar las lecturas personales. Añade, edita y organiza tus libros con un diseño moderno y colorido, en temas claro y oscuro.
 
 ![Mi Biblioteca Personal](screenshotLight.webp)
 ![Mi Biblioteca Personal](screenshotDark.webp)
@@ -32,9 +38,11 @@ Una aplicación de escritorio en Java para gestionar tus lecturas personales. A�
 
 ## 🚀 Instalación y uso
 
-1. Descarga el archivo `.jar` y el `config.properties` de la sección [Releases](../../releases)
-2. Coloca ambos archivos en la misma carpeta
-3. Haz doble clic en el `.jar` para ejecutar la aplicación
+1. Descarga el archivo `.jar` de la carpeta `target/` y el `config.properties.example` de la raíz del repositorio
+2. Renombra `config.properties.example` a `config.properties`
+3. Abre el fichero y añade tu API key de Google Books (ver sección siguiente)
+4. Coloca el `.jar` y el `config.properties` en la misma carpeta
+5. Haz doble clic en el `.jar` para ejecutar la aplicación
 
 > Si el doble clic no funciona, abre una terminal en esa carpeta y ejecuta:
 > ```bash
