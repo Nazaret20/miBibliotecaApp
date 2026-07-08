@@ -47,11 +47,15 @@ public class Window extends JFrame {
 
     // State
     private String currentFilter = "ALL";
-    private int cardWidth = 269;
-    private boolean isMaximized = false;
+    private int cardWidth = 373;
     private JButton themeBtn;
 
     public Window(boolean darkMode) {
+        this(darkMode, 373);
+    }
+
+    private Window(boolean darkMode, int initialCardWidth) {
+        cardWidth = initialCardWidth;
         try {
             bookFile = new BookFile();
         } catch (Exception e) {
@@ -104,7 +108,7 @@ public class Window extends JFrame {
         combo = new JComboBox<>(new String[] { "Fecha", "Título" });
         txtSearch = new JTextField();
 
-        cardsPanel = new JPanel(new WrapLayout(FlowLayout.CENTER, 15, 15));
+        cardsPanel = new JPanel(new WrapLayout(FlowLayout.CENTER, 20, 20));
         scroll = new JScrollPane(cardsPanel);
         centerContent = new JPanel(new BorderLayout());
     }
@@ -112,7 +116,7 @@ public class Window extends JFrame {
     /*----------------------------COMPONENTS----------------------------- */
     private void initComponents() {
         setTitle("Mi biblioteca");
-        setSize(900, 700);
+        setSize(1200, 800);
         setIconImage(new ImageIcon(getClass().getResource("/icons/bibliotecaIcon.png")).getImage());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -304,15 +308,13 @@ public class Window extends JFrame {
 
         addWindowStateListener(e -> {
             if ((e.getNewState() & java.awt.Frame.MAXIMIZED_BOTH) != 0) {
-                isMaximized = true;
                 SwingUtilities.invokeLater(() -> {
                     int width = (scroll.getViewport().getWidth() - 65) / 4;
                     updateCardSize(width);
                 });
             } else {
-                isMaximized = false;
                 SwingUtilities.invokeLater(() -> {
-                    cardWidth = 269;
+                    cardWidth = 373;
                     loadBooks(currentFilter);
                 });
             }
@@ -344,9 +346,10 @@ public class Window extends JFrame {
             Dimension size = getSize();
             boolean willBeDark = !(UIManager.getLookAndFeel() instanceof FlatDarkLaf);
             UIManager.setLookAndFeel(willBeDark ? new FlatDarkLaf() : new FlatLightLaf());
-            Window w = new Window(willBeDark);
+            Window w = new Window(willBeDark, cardWidth);
             w.setLocation(loc);
             w.setSize(size);
+            w.setExtendedState(getExtendedState());
             w.setVisible(true);
             dispose();
         } catch (Exception e) {
@@ -394,7 +397,7 @@ public class Window extends JFrame {
         if (cardsPanel.getComponentCount() == 0) {
             showEmptyState();
         } else {
-            cardsPanel.setLayout(new WrapLayout(FlowLayout.CENTER, 10, 10));
+            cardsPanel.setLayout(new WrapLayout(FlowLayout.CENTER, 15, 15));
         }
 
         cardsPanel.revalidate();

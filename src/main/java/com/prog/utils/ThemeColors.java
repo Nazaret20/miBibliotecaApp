@@ -86,7 +86,7 @@ public class ThemeColors {
     }
 
     public static Color statWishlistBackground() {
-        return isDark() ? new Color(80, 40, 60) : new Color(255, 224, 240);
+        return isDark() ? new Color(86, 28, 70) : new Color(255, 224, 240);
     }
 
     public static Color statWishlistValue() {
@@ -126,7 +126,7 @@ public class ThemeColors {
     }
 
     public static Color readPillBackground() {
-        return isDark() ? new Color(24, 53, 44) : new Color(231, 247, 221);
+        return isDark() ? new Color(34, 53, 44) : new Color(231, 247, 221);
     }
 
     public static Color readPillForeground() {
