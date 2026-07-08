@@ -2,7 +2,7 @@
 
 ## 🎓 Origen del proyecto
 
-Esta app nació como un ejercicio de preparación para el examen final de Java de 1º, donde practiqué la persistencia de datos en ficheros de texto con Swing por un lado, y por otro persistencia con BBDD. El ejercicio original era una biblioteca básica con operaciones CRUD sobre un `.txt` y una interfaz por defecto de Swing, con campos simples como título, autor, género y estado (leído/pendiente).
+Esta app nació como un ejercicio de preparación para el examen final de Java de 1º, donde practiqué la persistencia de datos en ficheros de texto por un lado, y por otro persistencia con BBDD, ambos con Swing . El ejercicio original era una biblioteca básica con operaciones CRUD sobre un `.txt` y una interfaz por defecto de Swing, con campos simples como título, autor, género y estado (leído/pendiente).
 
 Después del examen, lo retomé como proyecto personal para explorar cómo construir una interfaz moderna en Java partiendo de ese ejercicio base: integración con la API de Google Books para portadas y autocompletado de autor, modo oscuro, caché local de imágenes, búsqueda y filtros, y un diseño con FlatLaf y Nunito. No tenía nada que ver con el Swing por defecto que vi en clase, y ahora ¡así esto sí que mola!
 
