@@ -17,7 +17,11 @@ En definitiva, es una aplicación de escritorio en Java para gestionar las lectu
 ## ✨ Características
 
 - **Gestión completa de libros** — añade, edita y elimina libros fácilmente
-- **Estados de lectura** — clasifica tus libros como Leído, Leyendo, Próximamente o Quiero leer
+- **Estados de lectura** — clasifica tus libros en cuatro estados:
+  - ✓ **Leído** — libros que ya has terminado
+  - 📖 **Leyendo** — lectura en curso
+  - 🕒 **Próximamente** — libros anunciados que aún no han salido a la venta
+  - ♡ **Quiero leer** — libros disponibles que tienes pendientes de comprar o leer
 - **Portadas automáticas** — obtiene la portada del libro automáticamente desde Google Books
 - **Autocompletado de autor** — al escribir el título sugiere el autor automáticamente
 - **Filtros y búsqueda** — filtra por estado y busca por título o autor
