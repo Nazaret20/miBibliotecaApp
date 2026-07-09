@@ -9,6 +9,7 @@ Después del examen, lo retomé como proyecto personal para explorar cómo const
 En definitiva, es una aplicación de escritorio en Java para gestionar las lecturas personales. Añade, edita y organiza tus libros con un diseño moderno y colorido, en temas claro y oscuro.
 
 ![Mi Biblioteca Personal](screenshotLight.webp)
+
 ![Mi Biblioteca Personal](screenshotDark.webp)
 
 
